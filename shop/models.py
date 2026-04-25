@@ -3,60 +3,6 @@ from django.contrib.auth.models import User
 import uuid
 
 
-DELIVERY_ZONES = {
-    "nairobi": {
-        "cbd": 100,
-        "westlands": 200,
-        "karen": 350,
-        "rongai": 300,
-        "eastleigh": 150,
-        "kilimani": 180,
-        "lavington": 220,
-        "kileleshwa": 200,
-        "parklands": 180,
-        "south_b": 200,
-        "south_c": 220,
-        "embakasi": 280,
-        "langata": 250,
-        "muthaiga": 300,
-        "gigiri": 320,
-        "ruaka": 350,
-        "kiambu_road": 300,
-        "thika_road": 280,
-        "jogoo_road": 200,
-    },
-    "mombasa": {
-        "cbd": 150,
-        "nyali": 250,
-        "bamburi": 280,
-        "likoni": 300,
-        "mtwapa": 350,
-        "diani": 400,
-        "malindi": 500,
-        "changamwe": 200,
-    },
-    "kisumu": {
-        "cbd": 150,
-        "milimani": 180,
-        "nyalenda": 150,
-        "mamboleo": 170,
-        "kondele": 150,
-        "airport": 250,
-    },
-    "nakuru": {
-        "cbd": 150,
-        "lanet": 200,
-        "lanet_maw": 180,
-        "free_area": 170,
-    },
-    "eldoret": {
-        "cbd": 150,
-        "langeoni": 180,
-        "west": 170,
-    },
-}
-
-
 def calculate_delivery_fee(location_str):
     """Calculate delivery fee based on location string from OpenStreetMap"""
     if not location_str:
@@ -105,10 +51,10 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    id = models.AutoField(primary_key=True)
     delivery_fee = models.IntegerField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     landmark = models.CharField(max_length=200, null=True, blank=True)
-    id = models.AutoField(primary_key=True)
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)

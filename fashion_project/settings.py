@@ -161,7 +161,7 @@ MPESA_SHORTCODE = "174379"
 MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
 
 MPESA_CALLBACK_URL = "https://pluckiest-lore-presanguine.ngrok-free.dev/mpesa/callback/"
-
+# MPESA_CALLBACK_URL = "https://play.svix.com/in/e_xsFLP3zAD8yYvW8NfUAfVl4AEIv/mpesa/callback/"
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
