@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["*"]
 
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -141,8 +142,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "samuelkanyingi2016@gmail.com"  #
-EMAIL_HOST_PASSWORD = "kxqk bsag geph vtzc"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "samuelkanyingi2016@gmail.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "vwex ldat rbmj fngs")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Default primary key field type
@@ -152,17 +153,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MPESA_ENV = "sandbox"
 
-MPESA_CONSUMER_KEY = "NtKpRWVBWgdPfTmhuw3gpNwNagwxx4A9a84CCFAjx16pJN7J"
-MPESA_CONSUMER_SECRET = (
-    "dbThp41IkAhiCwm0jvxf7ncJjzFuAaLEubvMWpzgMLFPvLJseWxqPZ5lZdDjunzu"
+MPESA_CONSUMER_KEY = os.environ.get("MPESA_CONSUMER_KEY", "NtKpRWVBWgdPfTmhuw3gpNwNagwxx4A9a84CCFAjx16pJN7J")
+MPESA_CONSUMER_SECRET = os.environ.get(
+    "MPESA_CONSUMER_SECRET", "dbThp41IkAhiCwm0jvxf7ncJjzFuAaLEubvMWpzgMLFPvLJseWxqPZ5lZdDjunzu"
 )
 
-MPESA_SHORTCODE = "174379"
-MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+MPESA_SHORTCODE = os.environ.get("MPESA_SHORTCODE", "174379")
+MPESA_PASSKEY = os.environ.get("MPESA_PASSKEY", "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919")
 
-MPESA_CALLBACK_URL = "https://pluckiest-lore-presanguine.ngrok-free.dev/mpesa/callback/"
-# MPESA_CALLBACK_URL = "https://play.svix.com/in/e_xsFLP3zAD8yYvW8NfUAfVl4AEIv/mpesa/callback/"
-
+MPESA_CALLBACK_URL = os.environ.get("MPESA_CALLBACK_URL", "https://bride-certainly-distance.ngrok-free.dev/mpesa/callback/")
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "login"

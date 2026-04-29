@@ -4,20 +4,8 @@ import uuid
 
 
 def calculate_delivery_fee(location_str):
-    """Calculate delivery fee based on location string from OpenStreetMap"""
-    if not location_str:
-        return 300  # Default fee
-
-    location_lower = location_str.lower()
-
-    for city, areas in DELIVERY_ZONES.items():
-        if city in location_lower:
-            for area, fee in areas.items():
-                if area.replace("_", " ") in location_lower or area in location_lower:
-                    return fee
-            return list(areas.values())[0]  # Return default for city
-
-    return 350  # Default for unknown locations
+    """Stub - frontend calculates delivery fee based on distance"""
+    return 0
 
 
 class Product(models.Model):
