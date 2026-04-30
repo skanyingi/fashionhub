@@ -22,7 +22,7 @@
         </div>
         <div>
             <h3 style="margin-top: 0; color: #333; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Shipping To</h3>
-            <p style="margin: 8px 0;"><strong>Customer:</strong> {{ order.buyer.username }}</p>
+            <p style="margin: 8px 0;"><strong>Customer:</strong> {% if order.buyer %}{{ order.buyer.username }}{% else %}{{ order.email|default:"Guest" }}{% endif %}</p>
             <p style="margin: 8px 0;"><strong>Phone:</strong> {{ order.phone }}</p>
             <p style="margin: 8px 0;"><strong>Location:</strong> {{ order.location }}</p>
             <p style="margin: 8px 0;"><strong>Address:</strong> {{ order.address|default:"N/A" }}</p>

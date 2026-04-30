@@ -87,6 +87,12 @@
 </a>
 
 <!-- OOB swap for checkout button -->
+{% if user.is_authenticated %}
 <button class="checkout-btn" @click="open = true" {% if not cart %}style="display:none"{% endif %} id="checkout-btn-main" hx-swap-oob="true">
     <i class="fa fa-lock"></i> Proceed to Checkout
 </button>
+{% else %}
+<a href="{% url 'login' %}?next={% url 'cart' %}?checkout=true" class="checkout-btn" id="checkout-btn-main" hx-swap-oob="true" style="text-decoration: none; text-align: center; display: block; {% if not cart %}display:none{% endif %}">
+    <i class="fa fa-sign-in"></i> Login to Checkout
+</a>
+{% endif %}

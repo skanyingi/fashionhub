@@ -614,6 +614,7 @@
         </div>
 
         <!-- Order Summary -->
+        {% if cart %}
         <div class="order-summary-card">
             <h2>Order Summary</h2>
             
@@ -650,10 +651,17 @@
                 </div>
             </div>
 
+            {% if user.is_authenticated %}
             <button class="checkout-btn" @click="open = true" {% if not cart %}style="display:none"{% endif %} id="checkout-btn-main">
                 <i class="fa fa-lock"></i> Proceed to Checkout
             </button>
+            {% else %}
+            <a href="{% url 'login' %}?next={% url 'cart' %}?checkout=true" class="checkout-btn" style="text-decoration: none; text-align: center; display: block; {% if not cart %}display:none{% endif %}">
+                <i class="fa fa-sign-in"></i> Login to Checkout
+            </a>
+            {% endif %}
         </div>
+        {% endif %}
     </div>
 </main>
 
@@ -835,7 +843,7 @@
                 </div>
             </div>
 
-            {% if order and order.id %}
+            {% if user.is_authenticated and order %}
             <form method="post" hx-post="{% url 'stk_push' order_id=order.id %}">
                 {% csrf_token %}
                 <input type="hidden" name="phone" :value="phone">
@@ -848,8 +856,8 @@
             </form>
             {% else %}
             <div class="login-prompt" style="text-align: center; padding: 20px;">
-                <p style="margin-bottom: 15px;">You can checkout as a guest or <a href="{% url 'login' %}">login</a> for a faster experience.</p>
-                <p style="font-size: 14px; color: #666;">No account needed - just enter your email and phone to complete purchase!</p>
+                <p style="margin-bottom: 15px;">You must <a href="{% url 'login' %}?next={% url 'cart' %}?checkout=true">login</a> to complete your purchase.</p>
+                <p style="font-size: 14px; color: #666;">This ensures your order is securely tied to your account!</p>
             </div>
             {% endif %}
 

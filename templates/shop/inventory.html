@@ -165,7 +165,7 @@
               {% for order in orders %}
               <tr>
                 <td>{{ order.tracking_number }}</td>
-                <td>{{ order.buyer.username }}</td>
+                <td>{% if order.buyer %}{{ order.buyer.username }}{% else %}{{ order.email|default:"Guest" }}{% endif %}</td>
                 <td>KES {{ order.get_total_amount }}</td>
                 <td>
                   <span

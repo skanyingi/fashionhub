@@ -26,7 +26,7 @@
                     </td>
                     <td width="50%" valign="top" style="padding-left: 15px;">
                         <h3 style="margin: 0 0 10px 0; color: #333; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Shipping To</h3>
-                        <p style="margin: 5px 0; font-size: 14px;"><strong>Customer:</strong> {{ order.buyer.username }}</p>
+                        <p style="margin: 5px 0; font-size: 14px;"><strong>Customer:</strong> {% if order.buyer %}{{ order.buyer.username }}{% else %}{{ order.email|default:"Guest" }}{% endif %}</p>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Phone:</strong> {{ order.phone|default:"N/A" }}</p>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Location:</strong> {{ order.location|default:"N/A" }}</p>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Address:</strong> {{ order.address|default:"N/A" }}</p>

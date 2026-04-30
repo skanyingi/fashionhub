@@ -69,7 +69,7 @@ def generate_receipt_pdf(order):
             ],
             [
                 Paragraph(f"Order Number: <b>{order.tracking_number}</b><br/>M-Pesa Receipt: <b>{order.mpesa_receipt or 'N/A'}</b><br/>Date: {order.created_at.strftime('%b %d, %Y %H:%M')}<br/>Status: <font color='#04AA6D'><b>PAID</b></font>", normal_text),
-                Paragraph(f"Customer: <b>{order.buyer.username}</b><br/>Phone: {order.phone or 'N/A'}<br/>Location: {order.location or 'N/A'}<br/>Address: {order.address or 'N/A'}", normal_text)
+                Paragraph(f"Customer: <b>{order.buyer.username if order.buyer else (order.email or 'Guest')}</b><br/>Phone: {order.phone or 'N/A'}<br/>Location: {order.location or 'N/A'}<br/>Address: {order.address or 'N/A'}", normal_text)
             ]
         ]
         
@@ -307,7 +307,6 @@ def women(request):
     )
 
 
-# @login_required(login_url="login")
 def men(request):
     try:
         cart = request.session.get("cart", [])
@@ -360,7 +359,12 @@ def men(request):
 
 def add_to_cart(request):
     if request.method == "POST":
-        cart = request.session.get("cart", [])
+        try:
+            cart = request.session.get("cart", [])
+            if not isinstance(cart, list):
+                cart = []
+        except:
+            cart = []
 
         product_id = request.POST.get("product_id")
         size = request.POST.get("size", "")
@@ -497,36 +501,37 @@ def cart(request):
     continue_shopping_url = request.session.get('last_shop_url', reverse('women'))
 
     order = None
-    
-    # Create order for both logged in and guest users
+
     if cart_items:
+        # 1. Try to find the most recent order
         if request.user.is_authenticated:
-            # Logged in user
-            order, created = Order.objects.get_or_create(
-                buyer=request.user, status="PENDING", defaults={"delivery_fee": 0}
-            )
+            order = Order.objects.filter(buyer=request.user).order_by("-id").first()
         else:
-            # Guest user - get order from session
             order_id = request.session.get("guest_order_id")
             if order_id:
-                order = Order.objects.filter(id=order_id, status="PENDING").first()
-            
-            if not order:
-                # Create new order for guest
+                order = Order.objects.filter(id=order_id).first()
+
+        # 2. If we have items but no pending order, create one
+        if not order or order.status != "PENDING":
+            if request.user.is_authenticated:
+                order = Order.objects.create(
+                    buyer=request.user, status="PENDING", delivery_fee=0
+                )
+            else:
                 order = Order.objects.create(status="PENDING", delivery_fee=0)
                 request.session["guest_order_id"] = order.id
-        
-        if order:
+
+        # 3. Sync and update if it's a pending order
+        if order and order.status == "PENDING":
             sync_order_items(request, order)
 
             # Calculate delivery fee from location
-            location = request.POST.get("location") or (order.location if order else None)
+            location = request.POST.get("location") or order.location
             if location:
                 order.delivery_fee = calculate_delivery_fee(location)
                 order.save()
 
-    return render(
-        request, "shop/cart.html", {"cart": cart_items, "total": total, "order": order, "continue_shopping_url": continue_shopping_url}
+    return render(        request, "shop/cart.html", {"cart": cart_items, "total": total, "order": order, "continue_shopping_url": continue_shopping_url}
     )
 
 
@@ -599,7 +604,8 @@ def remove_item(request):
             if order:
                 order.delete()
                 if not request.user.is_authenticated:
-                    del request.session["guest_order_id"]
+                    if "guest_order_id" in request.session:
+                        del request.session["guest_order_id"]
             order = None
         elif order:
             sync_order_items(request, order)
@@ -624,9 +630,19 @@ def remove_item(request):
         )
 
 
-# @login_required(login_url="login")
+@login_required(login_url="login")
 def stk_push(request, order_id):
-    order = Order.objects.get(id=order_id)
+    # Verify ownership before proceeding
+    if request.user.is_authenticated:
+        order = get_object_or_404(Order, id=order_id, buyer=request.user)
+    else:
+        # This part should theoretically not be reached if @login_required works,
+        # but kept for robustness.
+        guest_order_id = request.session.get("guest_order_id")
+        if guest_order_id and str(guest_order_id) == str(order_id):
+            order = get_object_or_404(Order, id=order_id, buyer__isnull=True)
+        else:
+            return JsonResponse({"error": "Unauthorized access to this order"}, status=403)
 
     email = request.POST.get("email")
     location = request.POST.get("location")
@@ -838,7 +854,7 @@ def mpesa_callback(request):
                     print(f"✗ Platform receipt creation failed: {e}")
 
                 # Send confirmation email (backup)
-                email = order.email or order.buyer.email
+                email = order.email or (order.buyer.email if order.buyer else None)
                 if email:
                     try:
                         subject = f"Payment Confirmed - FashionHub Order {order.tracking_number}"
@@ -847,7 +863,8 @@ def mpesa_callback(request):
                         html_content = render_to_string("shop/email_receipt.html", {"order": order})
                         
                         # Create email with both text and HTML versions
-                        text_message = f"Hi {order.buyer.username}, your payment for order {order.tracking_number} was successful!"
+                        buyer_name = order.buyer.username if order.buyer else (order.email or "Guest")
+                        text_message = f"Hi {buyer_name}, your payment for order {order.tracking_number} was successful!"
                         
                         email_msg = EmailMultiAlternatives(
                             subject, text_message, settings.EMAIL_HOST_USER, [email]
@@ -1128,12 +1145,22 @@ def inventory(request):
 
 
 def check_order_status(request):
-    if not request.user.is_authenticated:
-        return HttpResponse("")
-
-    order = Order.objects.filter(buyer=request.user).order_by("-id").first()
+    order = None
+    if request.user.is_authenticated:
+        order = Order.objects.filter(buyer=request.user).order_by("-id").first()
+    else:
+        order_id = request.session.get("guest_order_id")
+        if order_id:
+            order = Order.objects.filter(id=order_id).first()
 
     if order:
+        if order.status == "PAID":
+            # ONLY clear the session cart if it actually has items.
+            # This prevents clearing the cart for subsequent shopping trips
+            # if this polling view is somehow still active or triggered.
+            if request.session.get("cart"):
+                request.session["cart"] = []
+            
         polling_attr = (
             'hx-get="/check-order-status/" hx-trigger="every 3s" hx-swap="outerHTML"'
             if order.status == "PENDING"
@@ -1153,19 +1180,24 @@ def check_order_status(request):
     return HttpResponse("")
 
 
+@login_required(login_url="login")
 def receipt(request, order_id):
     """Display receipt for a paid order"""
-    order = Order.objects.get(id=order_id, buyer=request.user)
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
 
     if order.status != "PAID":
         return redirect("cart")
 
+    # Clear the session cart when viewing receipt
+    request.session["cart"] = []
+    
     return render(request, "shop/receipt.html", {"order": order})
 
 
+@login_required(login_url="login")
 def download_receipt_pdf(request, order_id):
     """Download receipt as PDF"""
-    order = Order.objects.get(id=order_id, buyer=request.user)
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
 
     if order.status != "PAID":
         return redirect("cart")
@@ -1185,9 +1217,11 @@ def download_receipt_pdf(request, order_id):
         )
 
 
+@login_required(login_url="login")
 def test_payment(request, order_id):
     """Test endpoint to simulate successful payment (FOR TESTING ONLY)"""
-    order = Order.objects.get(id=order_id, buyer=request.user)
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+
     order.status = "PAID"
     order.mpesa_receipt = f"TEST{order_id}RECEIPT"
     order.save()
@@ -1196,24 +1230,19 @@ def test_payment(request, order_id):
 
 @csrf_exempt
 @require_POST
+@login_required(login_url="login")
 def update_shipping(request):
+    # Find order for logged in user
+    order = Order.objects.filter(buyer=request.user, status="PENDING").first()
+
+    if not order:
+        return JsonResponse({"error": "No pending order found"}, status=404)
+
     location = request.POST.get("location", "")
     address = request.POST.get("address", "")
     landmark = request.POST.get("landmark", "")
     email = request.POST.get("email")
     phone_input = request.POST.get("phone")
-
-    # Find order for both logged in and guest users
-    order = None
-    if request.user.is_authenticated:
-        order = Order.objects.filter(buyer=request.user, status="PENDING").first()
-    else:
-        order_id = request.session.get("guest_order_id")
-        if order_id:
-            order = Order.objects.filter(id=order_id, status="PENDING").first()
-
-    if not order:
-        return JsonResponse({"error": "No pending order found"}, status=404)
 
     # Update order details
     if location:
