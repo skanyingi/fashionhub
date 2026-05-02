@@ -1268,7 +1268,7 @@ def update_shipping(request):
         "grand_total": order.get_grand_total()
     })
 
-
+@login_required(login_url="login")
 def my_receipts(request):
     """Show all paid orders for the logged-in user."""
     if request.user.is_authenticated:
@@ -1285,7 +1285,7 @@ def run_report_generation():
     
     # Pre-clean: If there are multiple reports of the same type (from previous clutter), 
     # delete them so update_or_create doesn't crash.
-    for r_type in ["sales", "inventory", "orders", "customers", "products"]:
+    for r_type in ["sales", "inventory", "orders", "customers", "products", "bestsellers"]:
         existing = Report.objects.filter(report_type=r_type)
         if existing.count() > 1:
             existing.delete()
