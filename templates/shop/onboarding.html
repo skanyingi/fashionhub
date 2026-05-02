@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to FashionHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("{% static 'images/banner.jpeg' %}");
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .option-card {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background: #04AA6D;
+            color: white;
+        }
+
+        .option-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .option-card span {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .skip {
+            margin-top: 30px;
+            display: inline-block;
+            color: white;
+            text-decoration: underline;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .skip:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .container { padding: 20px; margin: 10px; }
+            .option-card { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg">
+    <div class="container">
+        <h1>FashionHub</h1>
+        <p>Your style journey starts here. What are you looking for today?</p>
+        
+        <div class="options">
+            <a href="{% url 'complete_onboarding' %}?next=women" class="option-card">
+                <i class="fa fa-female"></i>
+                <span>Women's Fashion</span>
+            </a>
+            
+            <a href="{% url 'complete_onboarding' %}?next=men" class="option-card">
+                <i class="fa fa-male"></i>
+                <span>Men's Fashion</span>
+            </a>
+            
+            <a href="{% url 'complete_onboarding' %}?next=index" class="option-card">
+                <i class="fa fa-shopping-bag"></i>
+                <span>Shop All</span>
+            </a>
+        </div>
+        
+        <a href="{% url 'complete_onboarding' %}" class="skip">Skip for now</a>
+    </div>
+</div>
+
+</body>
+</html>

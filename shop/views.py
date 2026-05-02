@@ -150,6 +150,16 @@ def generate_receipt_pdf(order):
         return None
 
 
+def onboarding(request):
+    return render(request, "shop/onboarding.html")
+
+
+def complete_onboarding(request):
+    request.session["has_seen_onboarding"] = True
+    next_url = request.GET.get("next", "index")
+    return redirect(next_url)
+
+
 def search(request):
     try:
         cart = request.session.get("cart", [])
@@ -179,6 +189,8 @@ def search(request):
 
 
 def index(request):
+    if not request.session.get("has_seen_onboarding"):
+        return redirect("onboarding")
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -258,6 +270,8 @@ def login_user(request):
 
 
 def women(request):
+    if not request.session.get("has_seen_onboarding"):
+        return redirect("onboarding")
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -308,6 +322,8 @@ def women(request):
 
 
 def men(request):
+    if not request.session.get("has_seen_onboarding"):
+        return redirect("onboarding")
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -956,6 +972,8 @@ def submit_review(request, product_id):
 
 
 def featured_products(request):
+    if not request.session.get("has_seen_onboarding"):
+        return redirect("onboarding")
     sort_order = request.GET.get("sort", "default")
 
     if sort_order == "low-to-high":
