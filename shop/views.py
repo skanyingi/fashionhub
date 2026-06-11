@@ -17,10 +17,11 @@ import base64
 import requests
 import json
 from django.views.decorators.http import require_POST
+from django.contrib.auth.forms import PasswordResetForm
 
 
 def generate_receipt_pdf(order):
-    """Generate professional PDF receipt for an order"""
+    """Generates PDF receipt for an order"""
     try:
         from reportlab.lib.pagesizes import letter
         from reportlab.lib import colors
@@ -34,34 +35,29 @@ def generate_receipt_pdf(order):
             HRFlowable,
         )
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-
+        # create buffer to store PDF in memory instead of savid to disk
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, leftMargin=0.5*inch, rightMargin=0.5*inch)
         elements = []
         styles = getSampleStyleSheet()
 
-        # Custom Styles
+        # Defines custom paragraph style for the PDF sections
         title_style = ParagraphStyle("Title", fontSize=28, textColor=colors.HexColor("#04AA6D"), alignment=1, spaceAfter=10, fontName="Helvetica-Bold")
         success_style = ParagraphStyle("Success", fontSize=18, textColor=colors.black, alignment=1, spaceAfter=5, fontName="Helvetica-Bold")
         subtitle_style = ParagraphStyle("Subtitle", fontSize=12, textColor=colors.grey, alignment=1, spaceAfter=25)
         section_header = ParagraphStyle("SectionHeader", fontSize=10, textColor=colors.HexColor("#333333"), fontName="Helvetica-Bold", spaceAfter=8, leading=12)
         normal_text = ParagraphStyle("NormalText", fontSize=10, textColor=colors.HexColor("#555555"), leading=14)
 
-        # Header
+        # Adding  my Header payment success at top
         elements.append(Paragraph("FASHIONHUB", title_style))
         elements.append(Spacer(1, 0.2 * inch))
-        
-        # Success Icon (Styled Large Checkmark)
-        # icon_style = ParagraphStyle("Icon", fontSize=44, textColor=colors.HexColor("#04AA6D"), alignment=1)
-        # elements.append(Paragraph("✔", icon_style))
         elements.append(Spacer(1, 0.1 * inch))
-
         elements.append(Paragraph("Payment Successful!", success_style))
         elements.append(Spacer(1, 0.05 * inch))
         elements.append(Paragraph("Thank you for your purchase. Your order is being processed.", subtitle_style))
         elements.append(Spacer(1, 0.2 * inch))
         
-        # Info Box (Order + Shipping)
+        # build a two column info box to show order details ans shipping address side by side
         info_data = [
             [
                 Paragraph("<b>ORDER DETAILS</b>", section_header),
@@ -85,11 +81,10 @@ def generate_receipt_pdf(order):
         elements.append(info_table)
         elements.append(Spacer(1, 0.4 * inch))
 
-        # Items Header
+        # build items purchased table listing each product, size, quantity and total
         elements.append(Paragraph("ITEMS PURCHASED", section_header))
         elements.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#eeeeee"), spaceAfter=10))
-        
-        # Items Table
+
         items_data = [["Product", "Size", "Qty", "Total"]]
         for item in order.items.all():
             items_data.append([
@@ -115,7 +110,7 @@ def generate_receipt_pdf(order):
         elements.append(items_table)
         elements.append(Spacer(1, 0.3 * inch))
 
-        # Totals Section (Aligned Right)
+        # build total section which shows subtotal, delivery_fee and grand total
         totals_data = [
             ["Subtotal:", f"KES {order.get_total_amount()}"],
             ["Delivery Fee:", f"KES {order.delivery_fee or 0}"],
@@ -133,33 +128,31 @@ def generate_receipt_pdf(order):
         ]))
         elements.append(totals_table)
 
-        # Footer
+        # Add Footer with delivery info and copyright
         elements.append(Spacer(1, 1.5 * inch))
         footer_style = ParagraphStyle("Footer", fontSize=9, textColor=colors.grey, alignment=1, leading=12)
         elements.append(Paragraph("A copy of this receipt has been sent to your email.<br/>Your order will be delivered within 1-2 days.<br/>Thank you for shopping with <b>FashionHub</b>!<br/>© 2026 FashionHub. All rights reserved.", footer_style))
 
+        # Build and return PDF buffer
         doc.build(elements)
         buffer.seek(0)
         return buffer
-
-    except ImportError:
-        print("reportlab not installed. Install with: pip install reportlab")
-        return None
+    # Catch pdf generation errors
     except Exception as e:
         print(f"PDF generation error: {e}")
         return None
 
-
+# First time visitors view welcome screen before homepage
 def onboarding(request):
     return render(request, "shop/onboarding.html")
 
-
+# Marks onboarding complete so user doen't view again
 def complete_onboarding(request):
-    request.session["has_seen_onboarding"] = True
+    request.session["has_seen_onboarding"] = True  # stores flag in session so onboarding is not shown again 
     next_url = request.GET.get("next", "index")
     return redirect(next_url)
 
-
+# Handle product search functionality
 def search(request):
     try:
         cart = request.session.get("cart", [])
@@ -189,8 +182,11 @@ def search(request):
 
 
 def index(request):
+    # Redirect to onboarding screen if user has not seen it
     if not request.session.get("has_seen_onboarding"):
         return redirect("onboarding")
+    
+    # Retrieve cart from session
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -202,7 +198,7 @@ def index(request):
 
     return render(request, "shop/index.html", {"cart": cart})
 
-
+# handl new user registration
 def register(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -225,23 +221,21 @@ def register(request):
             return HttpResponse(
                 '<div style="color: red; margin-bottom: 10px"> Username already taken</div>'
             )
-        User.objects.create_user(username=username, email=email, password=password)
-
+        User.objects.create_user(username=username, email=email, password=password) # Create new user account
+        # Use HTMX redirect to navigate to login page
         response = HttpResponse("redirect... ")
         response["HX-Redirect"] = "/login"
         return response
     return render(request, "shop/register.html")
 
 
-from django.contrib.auth.forms import PasswordResetForm
-
+# Handle user authentication and login
 def login_user(request):
     if request.method == "POST":
-        # ... (rest of method) ...
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Check if username exists
+        # Check if username exists in the database
         try:
             User.objects.get(username=username)
             # Username exists, now check password
@@ -250,28 +244,32 @@ def login_user(request):
                 login(request, user)
                 next_url = request.GET.get("next", "index")
                 response = HttpResponse("")
-
+                # Handle both URLs and full path URLs for redirect
                 if "/" not in next_url:
                     response["HX-Redirect"] = reverse(next_url)
                 else:
                     response["HX-Redirect"] = next_url
                 return response
             else:
+                # Username exists but password is wrong
                 return HttpResponse(
                     '<div style="color:red; padding-bottom: 20px;">Invalid password</div>'
                 )
         except User.DoesNotExist:
+            # username does not exist in the database
             return HttpResponse(
                 '<div style="color:red; padding-bottom: 20px;">Invalid username</div>'
             )
-
+    #GET request here and display login form with password reset option
     form = PasswordResetForm()
     return render(request, "shop/login.html", {"form": form})
 
-
+# Display women fashion products with filtering
 def women(request):
+    # Redirect to onboarding if not yet seen
     if not request.session.get("has_seen_onboarding"):
         return redirect("onboarding")
+    #retrieve cart from session
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -281,29 +279,33 @@ def women(request):
         cart = []
         request.session["cart"] = cart
 
+    # Get filter and sort parameters from URL query string
     sort = request.GET.get("sort")
     subcategory = request.GET.get("sub")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
 
+    # start with all women products then apply filters 
     products = Product.objects.filter(category__iexact="women")
     if subcategory:
         products = products.filter(subcategory__iexact=subcategory)
-
+    # price filter
     if min_price:
         products = products.filter(price__gte=int(min_price))
     if max_price:
         products = products.filter(price__lte=int(max_price))
 
+    #Apply sort order
     if sort == "low-to-high":
         products = products.order_by("price")
     elif sort == "high-to-low":
         products = products.order_by("-price")
 
-    is_htmx = request.headers.get("HX-Request") == "true"
+    # Return partial template from HTMX requests, full template otherwise i.e normal browser request return full page otherwise HTMX request returns only product grid
+    is_htmx = request.headers.get("HX-Request") == "true" # check if request came from HTMX for partial page update
     template = "shop/product_grid.html" if is_htmx else "shop/women.html"
 
-    # Save current shop page to session for "Continue Shopping" logic
+    # Save current URL to session for "Continue Shopping"button i.e save last visited page
     request.session['last_shop_url'] = request.get_full_path()
 
     return render(
@@ -320,7 +322,7 @@ def women(request):
         },
     )
 
-
+# displays men fashion with filtering and sorting
 def men(request):
     if not request.session.get("has_seen_onboarding"):
         return redirect("onboarding")
@@ -332,16 +334,17 @@ def men(request):
     except:
         cart = []
         request.session["cart"] = cart
-
+    # Apply sort
     sort = request.GET.get("sort")
     subcategory = request.GET.get("sub")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
 
+    # Filter for men products only
     products = Product.objects.filter(category__iexact="men")
     if subcategory:
         products = products.filter(subcategory__iexact=subcategory)
-
+    # price filter
     if min_price:
         products = products.filter(price__gte=int(min_price))
     if max_price:
@@ -355,7 +358,7 @@ def men(request):
     is_htmx = request.headers.get("HX-Request") == "true"
     template = "shop/product_grid.html" if is_htmx else "shop/men.html"
 
-    # Save current shop page to session for "Continue Shopping" logic
+    # Save current URL for "Continue Shopping" button
     request.session['last_shop_url'] = request.get_full_path()
 
     return render(
@@ -375,6 +378,7 @@ def men(request):
 
 def add_to_cart(request):
     if request.method == "POST":
+        # retreive/load existing cart from session
         try:
             cart = request.session.get("cart", [])
             if not isinstance(cart, list):
@@ -382,6 +386,7 @@ def add_to_cart(request):
         except:
             cart = []
 
+        # read input from form 
         product_id = request.POST.get("product_id")
         size = request.POST.get("size", "")
         quantity = int(request.POST.get("quantity", 1))
@@ -391,7 +396,7 @@ def add_to_cart(request):
             try:
                 product = Product.objects.get(id=product_id)
                 
-                # Check if product is in stock
+                # Check if product has any stock available
                 if product.stock <= 0:
                     return HttpResponse(f"""
                         <div style="color: red; padding: 10px; text-align: center;">
@@ -399,18 +404,18 @@ def add_to_cart(request):
                         </div>
                     """, status=400)
                 
-                # Check if requested quantity exceeds available stock
+                # Check  available stock and requested quantity
                 available_stock = product.stock
                 requested_qty = quantity
                 
-                # Check current quantity in cart
+                # Calculate how many of this items are already in the cart
                 current_qty_in_cart = 0
                 for item in cart:
                     if item.get("product_id") == str(product_id) and item.get("size") == size:
                         current_qty_in_cart = item.get("quantity", 0)
                         break
                 
-                # If adding more than available, limit it
+                # If adding more than available, limit it to prevent exceeding stock
                 if current_qty_in_cart + requested_qty > available_stock:
                     requested_qty = max(0, available_stock - current_qty_in_cart)
                     if requested_qty == 0:
@@ -421,14 +426,14 @@ def add_to_cart(request):
                         """, status=400)
                     quantity = requested_qty
                 
-                # Check if item already exists in cart with same size
+                # if item  with same product and size exists, increase quantity
                 found = False
                 for item in cart:
                     if item.get("product_id") == str(product_id) and item.get("size") == size:
                         item["quantity"] = item.get("quantity", 0) + quantity
                         found = True
                         break
-                
+                # if not found, add new item to cart
                 if not found:
                     item = {
                         "product_id": str(product_id),
@@ -443,7 +448,7 @@ def add_to_cart(request):
             except Product.DoesNotExist:
                 return HttpResponse("Product not found", status=404)
         else:
-            # Fallback for old implementation if needed
+            # Fallback just incase: add by name instead of product_id
             name = request.POST.get("name")
             found = False
             for item in cart:
@@ -462,8 +467,9 @@ def add_to_cart(request):
                 }
                 cart.append(item)
 
-        request.session["cart"] = cart
+        request.session["cart"] = cart # save updated cart back to session
         
+        # If redirect is set, send user to cart page
         if should_redirect:
             response = HttpResponse("")
             response["HX-Redirect"] = reverse("cart")
@@ -474,7 +480,7 @@ def add_to_cart(request):
                 <i class="fa fa-shopping-cart"></i>
                 <span style="position: absolute; top: -8px; right: -8px; background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; font-weight: bold;">{len(cart)}</span>
             </a>
-        ''')
+        ''')  #return updated cart icon
 
 
 def sync_order_items(request, order):
@@ -482,14 +488,15 @@ def sync_order_items(request, order):
     if not order:
         return
         
-    cart_items = request.session.get("cart", [])
-    # Clear existing items and rebuild to ensure accuracy
+    cart_items = request.session.get("cart", []) # load cart from session
+    # delete all existing order items and rebuild from session cart
     order.items.all().delete()
     
+    #loop cart items
     for item in cart_items:
         try:
-            # Try to find product by name (how session currently stores it)
-            product = Product.objects.get(name=item["name"])
+            # Find product by name to create order item
+            product = Product.objects.get(name=item["id"])
             OrderItem.objects.create(
                 order=order,
                 product=product,
@@ -498,28 +505,31 @@ def sync_order_items(request, order):
                 size=item.get("size", ""),
             )
         except Product.DoesNotExist:
-            print(f"Sync error: Product {item['name']} not found")
+            print(f"Sync error: Product {item['id']} not found")
         except Exception as e:
             print(f"Sync error: {e}")
             
     order.save()
 
-
+# displays shopping cart page with all current items
 def cart(request):
+    # load cart from session
     cart_items = request.session.get("cart", [])
-
+    
+    # calculate total price for each item
     for item in cart_items:
         item["total_price"] = item["price"] * item.get("quantity", 1)
-
+    
+    # calculate overall cart total
     total = sum(item["total_price"] for item in cart_items)
 
-    # Use session-stored shop URL for "Continue Shopping"
+    # Get last visited shop page for "Continue Shopping" button
     continue_shopping_url = request.session.get('last_shop_url', reverse('women'))
 
     order = None
 
     if cart_items:
-        # 1. Try to find the most recent order
+        # Try to find the most recent order for authenticated or guest user
         if request.user.is_authenticated:
             order = Order.objects.filter(buyer=request.user).order_by("-id").first()
         else:
@@ -527,17 +537,18 @@ def cart(request):
             if order_id:
                 order = Order.objects.filter(id=order_id).first()
 
-        # 2. If we have items but no pending order, create one
+        # Create new  pending order, if none exists or previous is not pending
         if not order or order.status != "PENDING":
             if request.user.is_authenticated:
                 order = Order.objects.create(
                     buyer=request.user, status="PENDING", delivery_fee=0
                 )
             else:
+                # create guest order and store ID in session
                 order = Order.objects.create(status="PENDING", delivery_fee=0)
                 request.session["guest_order_id"] = order.id
 
-        # 3. Sync and update if it's a pending order
+        # Sync cart items with database order and update delivery fee 
         if order and order.status == "PENDING":
             sync_order_items(request, order)
 
@@ -550,13 +561,14 @@ def cart(request):
     return render(        request, "shop/cart.html", {"cart": cart_items, "total": total, "order": order, "continue_shopping_url": continue_shopping_url}
     )
 
-
+# updates item quantities in the cart (increase or decrease)
 def update_cart(request):
-    if request.method == "POST":
-        cart_items = request.session.get("cart", [])
+    if request.method == "POST": 
+        cart_items = request.session.get("cart", []) # load session cart
+        # read user input
         action = request.POST.get("action")
         name = request.POST.get("name")
-
+        # Find item and update its quantity
         for item in cart_items:
             if item["name"] == name:
                 if "quantity" not in item:
@@ -564,15 +576,18 @@ def update_cart(request):
                 if action == "increase":
                     item["quantity"] += 1
                 elif action == "decrease" and item["quantity"] > 1:
+                    # prevent quantity from going below 1 or negative
                     item["quantity"] -= 1
                 break
-        request.session["cart"] = cart_items
+        request.session["cart"] = cart_items # save updated cart to session based on action
         
+        # recalculate totals for all items
         for item in cart_items:
             item["total_price"] = item["price"] * item.get("quantity", 1)
             
         total = sum(item["total_price"] for item in cart_items)
 
+        # find pending order and sync updated quantities to database
         order = None
         if request.user.is_authenticated:
             order = Order.objects.filter(buyer=request.user, status="PENDING").first()
@@ -598,15 +613,17 @@ def update_cart(request):
             {"cart": cart_items, "total": total, "order": order, "continue_shopping_url": continue_shopping_url},
         )
 
-
+# removes a specific item from the shopping cart by name
 def remove_item(request):
     if request.method == "POST":
-        cart_items = request.session.get("cart", [])
-        name = request.POST.get("name")
+        cart_items = request.session.get("cart", [])  # load cart from session
+        name = request.POST.get("name") # read item to remove
 
+        # remove the items with matching name from cart
         cart_items = [item for item in cart_items if item["name"] != name]
-        request.session["cart"] = cart_items
-
+        request.session["cart"] = cart_items # save updated cart back to session
+        
+        #find  pending order for current user
         order = None
         if request.user.is_authenticated:
             order = Order.objects.filter(buyer=request.user, status="PENDING").first()
@@ -615,7 +632,7 @@ def remove_item(request):
             if order_id:
                 order = Order.objects.filter(id=order_id, status="PENDING").first()
 
-        # Delete order if cart is empty
+        # Delete order from database if cart is now empty
         if not cart_items:
             if order:
                 order.delete()
@@ -624,8 +641,10 @@ def remove_item(request):
                         del request.session["guest_order_id"]
             order = None
         elif order:
+            # sync remaining items with database
             sync_order_items(request, order)
 
+        # recalculate totals
         for item in cart_items:
             item["total_price"] = item["price"] * item.get("quantity", 1)
 
@@ -645,21 +664,20 @@ def remove_item(request):
             {"cart": cart_items, "total": total, "order": order, "continue_shopping_url": continue_shopping_url},
         )
 
-
+# initiates an M-Pesa STK push payment request
 @login_required(login_url="login")
 def stk_push(request, order_id):
-    # Verify ownership before proceeding
+    # Verify the order belongs to the current user
     if request.user.is_authenticated:
         order = get_object_or_404(Order, id=order_id, buyer=request.user)
     else:
-        # This part should theoretically not be reached if @login_required works,
-        # but kept for robustness.
         guest_order_id = request.session.get("guest_order_id")
         if guest_order_id and str(guest_order_id) == str(order_id):
             order = get_object_or_404(Order, id=order_id, buyer__isnull=True)
         else:
             return JsonResponse({"error": "Unauthorized access to this order"}, status=403)
 
+    # extract and save delivery details from form submission 
     email = request.POST.get("email")
     location = request.POST.get("location")
     address = request.POST.get("address")
@@ -677,7 +695,7 @@ def stk_push(request, order_id):
     if landmark:
         order.landmark = landmark
     
-    # Use frontend-calculated delivery fee if provided
+    # Use frontend-calculated delivery fee or but i prefer mostly calculate from location since i use maps API
     delivery_fee_input = request.POST.get("delivery_fee")
     if delivery_fee_input is not None and delivery_fee_input != "":
         order.delivery_fee = int(float(delivery_fee_input))
@@ -687,40 +705,39 @@ def stk_push(request, order_id):
 
     order.save()
 
-    # Recalculate total for M-Pesa to ensure accuracy
+    # Get grand total to charge via M-Pesa
     total_amount = order.get_grand_total()
     
-    # Debug log to verify calculation
+    # Debug statement to log to verify calculation 
     print(f"STK Push: Subtotal={order.get_total_amount()}, Delivery={order.delivery_fee}, Total={total_amount}")
-
+    
+    # Generate M-Pesa API authentication timestamp and password
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     password = base64.b64encode(
         f"{settings.MPESA_SHORTCODE}{settings.MPESA_PASSKEY}{timestamp}".encode()
-    ).decode()
+    ).decode() #encrypted authentication string acting as password
 
-    access_token = get_mpesa_access_token()
+    access_token = get_mpesa_access_token() # Get mpesa token access
 
     if not order.phone:
         return JsonResponse({"error": "Phone number is required"}, status=400)
 
+    # Normalize phone number to 254XXXXXXXX format for M-Pesa
     phone = order.phone.strip()
-
     phone = phone.replace("+", "").replace(" ", "").replace("-", "")
     if phone.startswith("0"):
         phone = "254" + phone[1:]
     elif phone.startswith("7") or phone.startswith("1"):
         phone = "254" + phone
 
-    # ALWAYS use the order's calculated total, not the form's submitted amount
-    # This ensures correct amount is charged regardless of what was submitted
-    order_total = int(order.get_grand_total())
-    
-    # Ensure minimum amount is 1 (M-Pesa requirement)
+    # use order total as amount minimum is 1 KES
+    order_total = int(order.get_grand_total())    
     if order_total < 1:
         order_total = 1
     
     print(f"Payment - Order {order.id}: Total items: {order.items.count()}, Subtotal: {order.get_total_amount()}, Delivery: {order.delivery_fee}, Grand Total: {order_total}")
 
+    # Build an STK Push payload for Daraja API to make requests
     payload = {
         "BusinessShortCode": settings.MPESA_SHORTCODE,
         "Password": password,
@@ -744,6 +761,7 @@ def stk_push(request, order_id):
     print("Headers:", headers)
 
     try:
+        # send STK Push request to Safaricom sandbox API  triggers STK prompt on user phone
         response = requests.post(
             "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
             json=payload,
@@ -765,7 +783,7 @@ def stk_push(request, order_id):
         response_data = response.json()
         
         if response_data.get("ResponseCode") == "0":
-            # Store CheckoutRequestID so the callback can find this exact order
+            # Payment request is sent successfully then store CheckoutRequestID for callback matching 
             order.checkout_request_id = response_data.get("CheckoutRequestID")
             order.save()
             
@@ -780,6 +798,7 @@ def stk_push(request, order_id):
                 </div>
             """)
         else:
+            # M-Pesa returned an error response
             error_message = response_data.get("CustomerMessage", "Payment request failed")
             return HttpResponse(f"""
                 <div style="text-align: center; padding: 20px; background: #f8d7da; color: #721c24; border-radius: 6px; margin: 20px 0;">
@@ -788,6 +807,7 @@ def stk_push(request, order_id):
                 </div>
             """)
     except json.JSONDecodeError as e:
+        # Response from API was not valid JSON
         print(f"JSON decode error: {e}")
         return HttpResponse(f"""
             <div style="text-align: center; padding: 20px; background: #f8d7da; color: #721c24; border-radius: 6px; margin: 20px 0;">
@@ -796,7 +816,9 @@ def stk_push(request, order_id):
             </div>
         """)
     except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
+        
+        print(f"Request error: {e}") # for debugging purposes
+        # Network or connection error
         return HttpResponse(f"""
             <div style="text-align: center; padding: 20px; background: #f8d7da; color: #721c24; border-radius: 6px; margin: 20px 0;">
                 <h3 style="margin: 0 0 10px 0;">✗ Error</h3>
@@ -804,59 +826,55 @@ def stk_push(request, order_id):
             </div>
         """)
 
-
-@csrf_exempt
+# Receives and processes M-Pesa payment callback from safaricom after a transaction is completed
+@csrf_exempt #  crsf_exempt because django block post requests without CSRF token but safaricom sends external POST requests
 def mpesa_callback(request):
     try:
-        data = json.loads(request.body)
-        print("M-Pesa callback received:", data)
+        data = json.loads(request.body) # parse incoming safaricom JSON
+        #print("M-Pesa callback received:", data)
 
-        callback = data.get("Body", {}).get("stkCallback", {})
-
+        callback = data.get("Body", {}).get("stkCallback", {}) # Extract callbackObject to isolate payment result data
+        # ResultCode 0 means payment was successful
         if callback.get("ResultCode") == 0:
-            metadata = callback.get("CallbackMetadata", {}).get("Item", [])
+            metadata = callback.get("CallbackMetadata", {}).get("Item", []) # Extract callback metadata
             mpesa_receipt_num = None
 
+            # Extract M-Pesa receipt number from callback metadata
             for item in metadata:
                 if item.get("Name") == "MpesaReceiptNumber":
                     mpesa_receipt_num = item.get("Value")
                     break
 
-            # FIND THE EXACT ORDER using CheckoutRequestID
+            # Find the exact order using CheckoutRequestID
             checkout_request_id = callback.get("CheckoutRequestID")
             order = None
             if checkout_request_id:
                 order = Order.objects.filter(checkout_request_id=checkout_request_id).first()
             
-            # Fallback to latest pending if ID not found (for older transactions)
+            # Fallback to latest pending if ID not found especially for older transactions
             if not order:
                 order = Order.objects.filter(status="PENDING").order_by("-id").first()
 
             if order and mpesa_receipt_num:
-                # Ensure the order isn't empty before marking paid
-                if not order.items.exists():
-                    print(f"Warning: Attempting to mark empty order {order.id} as PAID. Syncing now...")
-                    # Try to sync from session if possible, but callback is often asynchronous
-                    # Better to log this as a warning for now
-                
+                #Mark the order as PAID and save receipt number
                 order.mpesa_receipt = mpesa_receipt_num
                 order.status = "PAID"
                 order.save()
-                print(f"✓ Order {order.tracking_number} updated - Receipt: {mpesa_receipt_num}, Status: PAID")
+                #print(f"✓ Order {order.tracking_number} updated - Receipt: {mpesa_receipt_num}, Status: PAID")
 
-                # DECREMENT STOCK for each item in the order
+                # decrement stock for each product in the order
                 for item in order.items.all():
                     product = item.product
                     if product.stock >= item.quantity:
                         product.stock -= item.quantity
                         product.save()
-                        print(f"  - Stock updated for {product.name}: {product.stock} left")
+                        #print(f"  - Stock updated for {product.name}: {product.stock} left")
                     else:
-                        print(f"  - Warning: Low stock for {product.name} ({product.stock} left), cannot decrement fully")
-                        product.stock = 0 # Empty stock
+                        #print(f"  - Warning: Low stock for {product.name} ({product.stock} left), cannot decrement fully")
+                        product.stock = 0 # Stock Insufficient - set to zero
                         product.save()
 
-                # Create platform receipt
+                # Generate and save PDF receipt to database
                 try:
                     pdf_buffer = generate_receipt_pdf(order)
                     platform_receipt = Receipt.objects.create(
@@ -866,6 +884,7 @@ def mpesa_callback(request):
                     print(
                         f"✓ Platform receipt created: {platform_receipt.receipt_number}"
                     )
+
                 except Exception as e:
                     print(f"✗ Platform receipt creation failed: {e}")
 
@@ -900,26 +919,27 @@ def mpesa_callback(request):
             else:
                 print("No pending order found or no receipt number")
         else:
+            # payment was canceled or failed
             result_desc = callback.get("ResultDesc", "Payment failed")
             print(f"Payment failed: {result_desc}")
 
     except Exception as e:
         print(f"Callback error: {e}")
 
-    return HttpResponse("OK")
+    return HttpResponse("OK") 
 
-
+# displays the detail page for a single product
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = request.session.get("cart", [])
     
-    # Get related products (same subcategory first, then same category, excluding current product)
+    # Get up to 4 related products from the same subcategory
     related_products = Product.objects.filter(
         subcategory__iexact=product.subcategory,
         category__iexact=product.category
     ).exclude(id=product.id)[:4]
     
-    # If not enough in same subcategory, pad with items from same category
+    # If not enough related products, pad with items from same category
     if related_products.count() < 4:
         additional_count = 4 - related_products.count()
         additional_products = Product.objects.filter(
@@ -929,10 +949,10 @@ def product_detail(request, product_id):
         )[:additional_count]
         related_products = list(related_products) + list(additional_products)
     
-    # Get reviews from database
+    # Get all reviews for this product ordered by most recent
     reviews = Review.objects.filter(product=product).order_by("-created_at")
     
-    # Calculate average rating
+    # Calculate average rating from all reviews
     avg_rating = 0
     if reviews.exists():
         avg_rating = round(sum(r.rating for r in reviews) / reviews.count(), 1)
@@ -946,7 +966,7 @@ def product_detail(request, product_id):
         "review_count": reviews.count(),
     })
 
-
+# handle submission of a peoduct review by a customer
 @require_POST
 def submit_review(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -955,12 +975,14 @@ def submit_review(request, product_id):
     rating = int(request.POST.get("rating", 5))
     comment = request.POST.get("comment", "").strip()
     
+    # validate that required fields are not empty
     if not name or not comment:
         return JsonResponse({"success": False, "error": "Please fill in all fields"})
     
+    # calmp rating to valid range of 1 to 5
     if rating < 1 or rating > 5:
         rating = 5
-    
+    # save review to database
     Review.objects.create(
         product=product,
         name=name,
@@ -970,12 +992,13 @@ def submit_review(request, product_id):
     
     return JsonResponse({"success": True})
 
-
+# Display all products as featured items with sortng ptions
 def featured_products(request):
     if not request.session.get("has_seen_onboarding"):
         return redirect("onboarding")
     sort_order = request.GET.get("sort", "default")
 
+    # Apply sort order to all products
     if sort_order == "low-to-high":
         products = Product.objects.all().order_by("price")
     elif sort_order == "high-to-low":
@@ -987,7 +1010,7 @@ def featured_products(request):
         request, "shop/featured.html", {"products": products, "sort_order": sort_order}
     )
 
-
+# handles newsletter email subscriptions
 @csrf_exempt
 def subscribe(request):
     if request.method == "POST":
@@ -999,6 +1022,7 @@ def subscribe(request):
             )
 
         try:
+            # send a welcome email to new subscriber
             subject = "Welcome to FashionHub Newsletter!"
             message = f"""
             Dear Subscriber,
@@ -1040,19 +1064,20 @@ def subscribe(request):
 
     return JsonResponse({"success": False, "message": "Invalid request method"})
 
-
+# display frequently asked questions page
 def faq(request):
     return render(request, "shop/faq.html")
 
-
+# handles contact form submission
 def contact(request):
     if request.method == "POST":
         name = request.POST.get("name")
         email = request.POST.get("email")
         message = request.POST.get("message")
 
-        # Send contact email to admin
+        # Send contact email to admin email
         try:
+            # forward contact message to admin email
             subject = f"Contact Form: Message from {name}"
             admin_message = f"""
             You have received a new contact form submission:
@@ -1074,7 +1099,7 @@ def contact(request):
                 [settings.EMAIL_HOST_USER],  # Send to myself
                 fail_silently=False,
             )
-
+            # Return success confirmaion HTML
             index_url = reverse("index")
             return HttpResponse(f"""
                 <div style="padding: 20px;">
@@ -1106,35 +1131,35 @@ def contact(request):
                     </div>
                 </div>
             """)
-
+    # GET request to display contact form
     return render(request, "shop/contact.html")
 
-
+#view shipping information page
 def shipping_info(request):
     return render(request, "shop/shipping_info.html")
 
-
+# view returns and refund policy page
 def returns(request):
     return render(request, "shop/returns.html")
 
-
+#Logs out current user and redirect to homepage
 def logout_view(request):
     logout(request)
     return redirect("index")
 
 
-# @user_passes_test(lambda u: u.is_staff)
+# Admin Dashboard for managing orders and product inventory
 def inventory(request):
     """Dashboard for tracking orders and product inventory - Admin only"""
-    # Get all orders
+    # Get most receent 20 orders
     orders = Order.objects.all().order_by("-id")[:20]
 
-    # Get statistics
+    # Calculate order statistics
     total_orders = Order.objects.count()
     paid_orders = Order.objects.filter(status="PAID").count()
     pending_orders = Order.objects.filter(status="PENDING").count()
 
-    # Calculate total revenue from OrderItems (3NF compliant)
+    # Calculate total revenue from paid order items 
     paid_order_ids = Order.objects.filter(status="PAID").values_list("id", flat=True)
     total_revenue = (
         OrderItem.objects.filter(order_id__in=paid_order_ids).aggregate(
@@ -1143,7 +1168,7 @@ def inventory(request):
         or 0
     )
 
-    # Get products by category
+    # Get products by gender category
     women_products = Product.objects.filter(category="women").order_by("name")
     men_products = Product.objects.filter(category="men").order_by("name")
 
@@ -1161,7 +1186,7 @@ def inventory(request):
         },
     )
 
-
+# polls the current order status for HTMX live updates
 def check_order_status(request):
     order = None
     if request.user.is_authenticated:
@@ -1173,12 +1198,10 @@ def check_order_status(request):
 
     if order:
         if order.status == "PAID":
-            # ONLY clear the session cart if it actually has items.
-            # This prevents clearing the cart for subsequent shopping trips
-            # if this polling view is somehow still active or triggered.
+            #  clear cart from session cart if it actually has items
             if request.session.get("cart"):
                 request.session["cart"] = []
-            
+        # continue polling every 3 seconds if order is still pending    
         polling_attr = (
             'hx-get="/check-order-status/" hx-trigger="every 3s" hx-swap="outerHTML"'
             if order.status == "PENDING"
@@ -1197,21 +1220,23 @@ def check_order_status(request):
         """)
     return HttpResponse("")
 
-
+# displays order receipt page for a completed paid order
 @login_required(login_url="login")
 def receipt(request, order_id):
     """Display receipt for a paid order"""
     order = get_object_or_404(Order, id=order_id, buyer=request.user)
 
+    # Only show receipt for paid orders
     if order.status != "PAID":
         return redirect("cart")
 
-    # Clear the session cart when viewing receipt
+    # Clear the session cart after successful payment
     request.session["cart"] = []
     
     return render(request, "shop/receipt.html", {"order": order})
 
 
+# Generate and downloads pdf receipt for a paid order
 @login_required(login_url="login")
 def download_receipt_pdf(request, order_id):
     """Download receipt as PDF"""
@@ -1223,6 +1248,7 @@ def download_receipt_pdf(request, order_id):
     pdf_buffer = generate_receipt_pdf(order)
 
     if pdf_buffer:
+        # return PDF as downloadable file attachment
         response = HttpResponse(pdf_buffer.getvalue(), content_type="application/pdf")
         response["Content-Disposition"] = (
             f'attachment; filename="Receipt_{order.tracking_number}.pdf"'
@@ -1235,6 +1261,7 @@ def download_receipt_pdf(request, order_id):
         )
 
 
+# tesing endpoint to simulate successful payment
 @login_required(login_url="login")
 def test_payment(request, order_id):
     """Test endpoint to simulate successful payment (FOR TESTING ONLY)"""
@@ -1245,12 +1272,12 @@ def test_payment(request, order_id):
     order.save()
     return redirect("cart")
 
-
+#update shipping and delivery details for a pending order
 @csrf_exempt
 @require_POST
 @login_required(login_url="login")
 def update_shipping(request):
-    # Find order for logged in user
+    # Find pending order for logged in user
     order = Order.objects.filter(buyer=request.user, status="PENDING").first()
 
     if not order:
@@ -1262,7 +1289,7 @@ def update_shipping(request):
     email = request.POST.get("email")
     phone_input = request.POST.get("phone")
 
-    # Update order details
+    # Update order fields with provided shipping details
     if location:
         order.location = location
         order.delivery_fee = calculate_delivery_fee(location)
@@ -1286,6 +1313,8 @@ def update_shipping(request):
         "grand_total": order.get_grand_total()
     })
 
+
+# displays all paid orders for the currently logged in user
 @login_required(login_url="login")
 def my_receipts(request):
     """Show all paid orders for the logged-in user."""
@@ -1296,23 +1325,23 @@ def my_receipts(request):
     return render(request, "shop/my_receipts.html", {"orders": orders})
 
 
+# generates or updates all six standard business reports
 def run_report_generation():
     """Helper to update or create the 5 standard reports with latest data"""
     now = datetime.datetime.now()
     timestamp_str = now.strftime('%b %d, %I:%M:%S %p')
     
-    # Pre-clean: If there are multiple reports of the same type (from previous clutter), 
-    # delete them so update_or_create doesn't crash.
+    # clean up duplicate reports of same type before regenerating 
     for r_type in ["sales", "inventory", "orders", "customers", "products", "bestsellers"]:
         existing = Report.objects.filter(report_type=r_type)
         if existing.count() > 1:
             existing.delete()
 
-    # 1. Sales Report - Only include orders that actually have items
+    #  1. Sales Report - revenue and order summary for paid orders with items
     paid_orders = Order.objects.filter(status="PAID").order_by("-created_at")
-    valid_paid_orders = [o for o in paid_orders if o.items.exists()]
+    valid_paid_orders = [o for o in paid_orders if o.items.exists()] # filter orders that atually contain items 
     total_revenue = sum(o.get_grand_total() for o in valid_paid_orders)
-    
+    #save /update sales reports
     Report.objects.update_or_create(
         report_type="sales",
         defaults={
@@ -1329,8 +1358,8 @@ def run_report_generation():
         }
     )
 
-    # 2. Inventory Report
-    products = Product.objects.all().order_by("stock")
+    # 2. Inventory Report - stock levels with low stock alerts
+    products = Product.objects.all().order_by("stock") # gt products sorted by stock
     Report.objects.update_or_create(
         report_type="inventory",
         defaults={
@@ -1344,7 +1373,7 @@ def run_report_generation():
         }
     )
 
-    # 3. Orders Report
+    # 3. Orders Report with all order statuses and counts
     all_orders = Order.objects.all().order_by("-created_at")
     Report.objects.update_or_create(
         report_type="orders",
@@ -1368,7 +1397,7 @@ def run_report_generation():
         }
     )
 
-    # 4. Customer Report
+    # 4. Customer Report -  users ranked by number of paid orders
     customers = User.objects.annotate(
         total_orders_count=models.Count("orders"),
         paid_orders_count=models.Count("orders", filter=models.Q(orders__status="PAID"))
@@ -1395,7 +1424,7 @@ def run_report_generation():
         }
     )
 
-    # 5. Product Report
+    # 5. Product Report - products ranked by avearate customer rating
     all_products = list(Product.objects.all())
     all_products.sort(key=lambda p: p.get_avg_rating(), reverse=True)
     Report.objects.update_or_create(
@@ -1409,7 +1438,7 @@ def run_report_generation():
         }
     )
 
-    # 6. Best Sellers Report - Show ALL products including those with 0 sales
+    # 6. Best Sellers Report - products ranked by quantity sold incuding zero sales
     from django.db.models import Sum, F, Q, OuterRef, Subquery
     
     # Get products that have been sold
@@ -1427,7 +1456,7 @@ def run_report_generation():
     # Build the list - include all products
     best_sellers_items = []
     for product in all_products:
-        # Get total sold for this product
+        # Get total sunits sold from paid orders
         sold_data = OrderItem.objects.filter(
             product=product,
             order__status="PAID"
@@ -1443,7 +1472,7 @@ def run_report_generation():
             "Current Stock": product.stock
         })
     
-    # Sort by quantity sold (highest first), take top 30
+    # Sort by quantity sold descending order
     best_sellers_items = sorted(best_sellers_items, key=lambda x: x["Quantity Sold"], reverse=True)[:30]
 
     Report.objects.update_or_create(
@@ -1457,7 +1486,7 @@ def run_report_generation():
         }
     )
 
-
+# generate all reports
 @login_required
 def generate_all_reports(request):
     """Manual trigger to refresh reports (now just calls the helper)"""
@@ -1469,16 +1498,19 @@ def generate_all_reports(request):
 
 from django.contrib.admin.views.decorators import staff_member_required
 
+#displays all generated bsuiness reports to staff members
 @staff_member_required
 def reports(request):
     """View all reports - auto-updates data on page load"""
+    
+    # always regenrate report with latest data when page loads
     run_report_generation()
         
     cart = request.session.get("cart", [])
     reports = Report.objects.all().order_by("report_type")  # Stable order
     return render(request, "shop/reports.html", {"reports": reports, "cart": cart})
 
-
+# displays detailed data for a single specific report
 @staff_member_required
 def report_detail(request, report_id):
     """View a specific report"""
@@ -1486,7 +1518,7 @@ def report_detail(request, report_id):
     report = Report.objects.get(id=report_id)
     return render(request, "shop/report_detail.html", {"report": report, "cart": cart})
 
-
+# display all orders pending or paid for the logged in user
 @login_required
 def order_history(request):
     """View all pending and paid orders for the logged-in user"""
@@ -1494,7 +1526,7 @@ def order_history(request):
     cart = request.session.get("cart", [])
     return render(request, "shop/order_history.html", {"orders": orders, "cart": cart})
 
-
+# allow user to cance and delete a pending order
 @login_required
 @require_POST
 def delete_pending_order(request, order_id):
@@ -1503,7 +1535,7 @@ def delete_pending_order(request, order_id):
     order.delete()
     return redirect("order_history")
 
-
+# allows user to track order
 def track_order(request):
     """Track order by tracking number or email"""
     cart = request.session.get("cart", [])
@@ -1520,7 +1552,7 @@ def track_order(request):
             if not order:
                 error = "No order found with that tracking number."
         elif email_input:
-            # Look up by email
+            # Look up by email - returns only paid orders
             order = Order.objects.filter(email__iexact=email_input, status="PAID").first()
             if not order:
                 error = "No paid order found with that email."
