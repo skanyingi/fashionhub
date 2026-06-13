@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 status="PAID" if i % 2 == 0 else "PENDING",
                 phone=f"2547{i:08d}",
                 location="Nairobi CBD",
-                city="Nairobi",
+# No changes needed here, just verifying.
                 address=f"Test Address {i + 1}",
                 delivery_fee=200,
             )
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                     order=order,
                     product=prod,
                     quantity=random.randint(1, 3),
-                    price=prod.price,
+                    unit_price_at_purchase=prod.price,
                     size="M" if prod.subcategory in ["clothing", "shoes"] else "",
                 )
 

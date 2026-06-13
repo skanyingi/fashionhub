@@ -1,0 +1,29 @@
+<div id="helpful-button-{{ review.id }}" class="review-voting" style="margin-top: 15px; display: flex; align-items: center; gap: 12px;">
+    {% if review.user_has_voted %}
+        <button hx-post="{% url 'toggle_review_helpful' review.id %}"
+                hx-target="#helpful-button-{{ review.id }}"
+                hx-swap="outerHTML"
+                style="background: #e8f5e9; border: 1px solid #04aa6d; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; color: #04aa6d; transition: all 0.2s;"
+                onmouseover="this.style.background='#c8e6c9'" 
+                onmouseout="this.style.background='#e8f5e9'">
+            <i class="fa fa-thumbs-up"></i>
+            <span>Helpful</span>
+        </button>
+    {% else %}
+        <button hx-post="{% url 'toggle_review_helpful' review.id %}"
+                hx-target="#helpful-button-{{ review.id }}"
+                hx-swap="outerHTML"
+                style="background: none; border: 1px solid #ddd; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; color: #666; transition: all 0.2s;"
+                onmouseover="this.style.background='#f0f0f0'" 
+                onmouseout="this.style.background='none'">
+            <i class="fa fa-thumbs-o-up"></i>
+            <span>Helpful</span>
+        </button>
+    {% endif %}
+    
+    {% if review.get_helpful_count > 0 %}
+        <span style="font-size: 13px; color: #888;">
+            <i class="fa fa-users"></i> {{ review.get_helpful_count }} people found this helpful
+        </span>
+    {% endif %}
+</div>

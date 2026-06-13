@@ -8,7 +8,7 @@ class AuthIntegrationTestCase(TestCase):
 
     def test_full_auth_cycle(self):
         """Test Register -> Login -> Logout flow"""
-        # 1. Register
+        # Register
         register_data = {
             'username': 'newuser',
             'email': 'new@test.com',
@@ -19,18 +19,18 @@ class AuthIntegrationTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(User.objects.filter(username='newuser').exists())
 
-        # 2. Login
+        # Login
         response = self.client.post(reverse('login'), {
             'username': 'newuser',
             'password': 'password123'
         })
         self.assertEqual(response.status_code, 200)
         
-        # Verify user is logged in by checking index page context or similar
+        # Verify user is logged in by checking index page context
         response = self.client.get(reverse('index'))
         self.assertEqual(response.context['user'].username, 'newuser')
 
-        # 3. Logout
+        # Logout
         response = self.client.get(reverse('logout'))
         self.assertRedirects(response, reverse('index'))
         

@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 
-class MiscTestCase(TestCase):
+class PagesTestCase(TestCase):
+    fixtures = ['test_data.json']
+
     def setUp(self):
         self.client = Client()
 

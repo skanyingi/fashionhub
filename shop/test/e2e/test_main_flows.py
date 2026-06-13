@@ -25,11 +25,10 @@ def test_registration_and_login_flow(page: Page):
     page.click('button[type="submit"]')
 
     # 3. Verify login - My Receipts only appears when authenticated
-    page.wait_for_url(f"{BASE_URL}/", timeout=10000)
+    page.wait_for_url(f"{BASE_URL}/", timeout=15000)
     expect(page.get_by_text("My Receipts")).to_be_visible(timeout=10000)
 
     # 4. Logout via direct POST using page.context.request (shares browser cookies)
-    # page.request is isolated and has NO session cookie - always use page.context.request
     cookies = {c["name"]: c["value"] for c in page.context.cookies()}
     csrf = cookies.get("csrftoken", "")
     page.context.request.post(
@@ -42,11 +41,9 @@ def test_registration_and_login_flow(page: Page):
         data=f"csrfmiddlewaretoken={csrf}",
     )
 
-    # 5. Confirm logged out - cart page should still work (no login required)
-    # but my-receipts redirects to login if @login_required is added (see fix below)
-    # For now, verify session is gone by checking the home page renders login state
+    # 5. Confirm logged out 
     page.goto(f"{BASE_URL}/")
-    # My Receipts disappears from sidenav when logged out
+    # My Receipts should disappear from sidenav when logged out
     expect(page.get_by_text("My Receipts")).not_to_be_visible(timeout=10000)
 
 

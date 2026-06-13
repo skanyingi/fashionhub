@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from shop.models import Product, Review
+from django.contrib.auth.decorators import login_required
+from shop.models import Product, Review, ReviewHelpful
 
 
 def index(request):
     # Redirect to onboarding screen if user has not seen it
-    if not request.session.get("has_seen_onboarding"):
-        return redirect("onboarding")
+    # if not request.session.get("has_seen_onboarding"):
+    #     return redirect("onboarding")
     
     # Retrieve cart from session
     try:
@@ -57,9 +58,9 @@ def search(request):
 
 # Display women fashion products with filtering
 def women(request):
-    # Redirect to onboarding if not yet seen
-    if not request.session.get("has_seen_onboarding"):
-        return redirect("onboarding")
+    # # Redirect to onboarding if not yet seen
+    # if not request.session.get("has_seen_onboarding"):
+    #     return redirect("onboarding")
     #retrieve cart from session
     try:
         cart = request.session.get("cart", [])
@@ -115,8 +116,6 @@ def women(request):
 
 # displays men fashion with filtering and sorting
 def men(request):
-    if not request.session.get("has_seen_onboarding"):
-        return redirect("onboarding")
     try:
         cart = request.session.get("cart", [])
         if not isinstance(cart, list):
@@ -216,8 +215,6 @@ def product_detail(request, product_id):
 
 # Display all products as featured items with sortng ptions
 def featured_products(request):
-    if not request.session.get("has_seen_onboarding"):
-        return redirect("onboarding")
     sort_order = request.GET.get("sort", "default")
 
     # Apply sort order to all products
@@ -237,25 +234,56 @@ def featured_products(request):
 # handle submission of a peoduct review by a customer
 @require_POST
 def submit_review(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "Authentication required"})
+
     product = get_object_or_404(Product, id=product_id)
-    
-    name = request.POST.get("name", "").strip()
+
     rating = int(request.POST.get("rating", 5))
     comment = request.POST.get("comment", "").strip()
-    
+
     # validate that required fields are not empty
-    if not name or not comment:
-        return JsonResponse({"success": False, "error": "Please fill in all fields"})
-    
+    if not comment:
+        return JsonResponse({"success": False, "error": "Please provide a comment"})
+
     # calmp rating to valid range of 1 to 5
     if rating < 1 or rating > 5:
         rating = 5
     # save review to database
     Review.objects.create(
         product=product,
-        name=name,
+        buyer=request.user,
         rating=rating,
         comment=comment
     )
-    
+
     return JsonResponse({"success": True})
+
+
+# toggle helpful vote on a review
+@login_required(login_url="login")
+@require_POST
+def toggle_review_helpful(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    vote, created = ReviewHelpful.objects.get_or_create(review=review, user=request.user)
+    
+    if not created:
+        # If vote already exists, delete it (unlike)
+        vote.delete()
+        action = "unvoted"
+    else:
+        action = "voted"
+    
+    # If request is from HTMX, return a partial fragment, otherwise return JSON
+    if request.headers.get("HX-Request") == "true":
+        return render(request, "shop/components/helpful_button.html", {
+            "review": review,
+            "user_has_voted": created
+        })
+        
+    return JsonResponse({
+        "success": True, 
+        "action": action, 
+        "count": review.get_helpful_count()
+    })
+

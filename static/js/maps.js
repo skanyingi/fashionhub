@@ -172,15 +172,12 @@ function checkoutApp() {
         init() {
             this.$watch('open', (value) => {
                 if (value) {
+                    
                     setTimeout(() => {
                         this.initGoogleMap();
-                    }, 100);
+                    }, 400);
                 }
             });
-        },
-        
-        initOSMMap() {
-            // OSM Map disabled - using Google Maps only
         },
         
         initGoogleMap() {
@@ -206,7 +203,7 @@ function checkoutApp() {
                 const lat = e.latLng.lat();
                 const lng = e.latLng.lng();
                 
-                // FIXED: Changed setMap(null) to .map = null for AdvancedMarkerElement
+            
                 if (googleMarkerInstance) {
                     googleMarkerInstance.map = null;
                 }
@@ -273,7 +270,7 @@ function checkoutApp() {
                                 googleMapInstance.setCenter({ lat, lng });
                                 googleMapInstance.setZoom(15);
                                 
-                                // FIXED: Changed setMap(null) to .map = null
+                               
                                 if (googleMarkerInstance) {
                                     googleMarkerInstance.map = null;
                                 }
@@ -320,10 +317,6 @@ function checkoutApp() {
             }
         },
         
-        searchLocation() {
-            // OSM search disabled - using Google Maps only
-        },
-        
         selectLocation(suggestion) {
             this.selectedLocation = suggestion;
             this.suggestions = [];
@@ -339,7 +332,7 @@ function checkoutApp() {
                 googleMapInstance.setCenter({ lat, lng: lon });
                 googleMapInstance.setZoom(15);
                 
-                // FIXED: Changed setMap(null) to .map = null
+               
                 if (googleMarkerInstance) {
                     googleMarkerInstance.map = null;
                 }
@@ -384,10 +377,6 @@ function checkoutApp() {
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
             );
-        },
-        
-        reverseGeocodeOSM(lat, lon) {
-            // OSM reverse geocoding disabled - using Google Maps only
         },
         
         reverseGeocodeGoogle(lat, lon) {

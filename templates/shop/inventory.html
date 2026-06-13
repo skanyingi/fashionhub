@@ -174,7 +174,7 @@
                     {{ order.status }}
                   </span>
                 </td>
-                <td>{{ order.mpesa_receipt|default:"—" }}</td>
+                <td>{{ order.get_mpesa_receipt_number|default:"-" }}</td>
               </tr>
               {% empty %}
               <tr>

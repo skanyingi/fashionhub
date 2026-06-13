@@ -1,5 +1,6 @@
 {% extends "shop/base.html" %}
 {% load static %}
+{% load review_extras %}
 
 {% block title %}{{ product.name }} - FashionHub{% endblock %}
 
@@ -152,23 +153,68 @@
     </button>
     
     <div x-show="reviewsOpen" x-collapse x-cloak>
-    <div x-data="{ open: false, rating: 0, hoverRating: 0, name: '', comment: '', loading: false, success: false, error: false, errorMessage: '', async submitReview() { if (this.rating === 0) { this.error = true; this.errorMessage = 'Please select a rating'; return; } this.loading = true; this.error = false; this.success = false; const formData = new FormData(); formData.append('rating', this.rating); formData.append('name', this.name); formData.append('comment', this.comment); formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value); try { const response = await fetch('{% url 'submit_review' product.id %}', { method: 'POST', body: formData }); const data = await response.json(); if (data.success) { this.success = true; this.name = ''; this.comment = ''; this.rating = 0; setTimeout(() => { window.location.reload(); }, 1500); } else { this.error = true; this.errorMessage = data.error || 'Something went wrong'; } } catch (e) { this.error = true; this.errorMessage = 'Network error.'; } this.loading = false; } }" style="margin-bottom: 30px;">
-        <button @click="open = !open" style="background: #04aa6d; color: white; border: none; padding: 12px 25px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer;">Write a Review</button>
-        <div x-show="open" x-collapse x-cloak style="background: #f9f9f9; padding: 25px; border-radius: 8px; margin-top: 15px;">
-            <form @submit.prevent="submitReview">
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Your Rating</label>
-                    <div class="star-rating" style="font-size: 24px; cursor: pointer;">
-                        <template x-for="i in 5">
-                            <span @click="rating = i" @mouseover="hoverRating = i" @mouseleave="hoverRating = 0" :style="(hoverRating || rating) >= i ? 'color: #ffc107' : 'color: #ddd'">&#9733;</span>
-                        </template>
+    <div x-data="{ open: false, rating: 0, hoverRating: 0, name: '{{ user.username|default:'' }}', comment: '', loading: false, success: false, error: false, errorMessage: '', async submitReview() { if (this.rating === 0) { this.error = true; this.errorMessage = 'Please select a rating'; return; } this.loading = true; this.error = false; this.success = false; const formData = new FormData(); formData.append('rating', this.rating); formData.append('name', this.name); formData.append('comment', this.comment); formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value); try { const response = await fetch('{% url 'submit_review' product.id %}', { method: 'POST', body: formData }); const data = await response.json(); if (data.success) { this.success = true; this.name = ''; this.comment = ''; this.rating = 0; setTimeout(() => { window.location.reload(); }, 1500); } else { this.error = true; this.errorMessage = data.error || 'Something went wrong'; } } catch (e) { this.error = true; this.errorMessage = 'Network error.'; } this.loading = false; } }" style="margin-bottom: 30px;">
+        
+        {% if user.is_authenticated %}
+            <button @click="open = !open" style="background: #04aa6d; color: white; border: none; padding: 12px 25px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                <i class="fa fa-pencil"></i> <span x-text="open ? 'Close Form' : 'Write a Review'"></span>
+            </button>
+
+            <div x-show="open" x-collapse x-cloak style="background: #f9f9f9; padding: 25px; border-radius: 12px; margin-top: 15px; border: 1px solid #eee;">
+                <form @submit.prevent="submitReview">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Your Rating</label>
+                        <div class="star-rating" style="font-size: 28px; cursor: pointer; display: flex; gap: 5px;">
+                            <template x-for="i in 5">
+                                <span @click="rating = i" @mouseover="hoverRating = i" @mouseleave="hoverRating = 0" 
+                                      :style="(hoverRating || rating) >= i ? 'color: #ffc107' : 'color: #ddd'"
+                                      style="transition: color 0.2s;">&#9733;</span>
+                            </template>
+                        </div>
                     </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Your Name</label>
+                        <input type="text" x-model="name" value="{{ user.username }}" readonly 
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; color: #666; cursor: not-allowed; font-size: 15px;">
+                        <small style="color: #04aa6d; display: block; margin-top: 5px;"><i class="fa fa-check-circle"></i> Authenticated as {{ user.username }}</small>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Your Review</label>
+                        <textarea x-model="comment" placeholder="Share your experience with this product..." required rows="4" 
+                                  style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; line-height: 1.5;"></textarea>
+                    </div>
+
+                    <div x-show="error" x-text="errorMessage" x-transition style="color: #c62828; background: #ffebee; padding: 12px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #c62828;"></div>
+                    <div x-show="success" x-transition style="color: #2e7d32; background: #e8f5e9; padding: 12px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #2e7d32;">
+                        <i class="fa fa-check-circle"></i> Review submitted successfully! Page will refresh in a moment...
+                    </div>
+
+                    <button type="submit" :disabled="loading" 
+                            style="background: #04aa6d; color: white; border: none; padding: 14px 35px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 12px; transition: background 0.2s;">
+                        <span x-show="!loading">Submit Review</span>
+                        <span x-show="loading" style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa fa-circle-o-notch fa-spin"></i> Submitting...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div style="width: 50px; height: 50px; background: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa fa-lock" style="font-size: 24px; color: #f9a825;"></i>
                 </div>
-                <div style="margin-bottom: 15px;"><input type="text" x-model="name" placeholder="Your Name" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"></div>
-                <div style="margin-bottom: 15px;"><textarea x-model="comment" placeholder="Your Review" required rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"></textarea></div>
-                <button type="submit" :disabled="loading" style="background: #04aa6d; color: white; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer;">Submit Review</button>
-            </form>
-        </div>
+                <div>
+                    <strong style="display: block; color: #333; margin-bottom: 6px; font-size: 18px;">Customer Reviews are Restricted</strong>
+                    <span style="color: #666; font-size: 15px; line-height: 1.4;">
+                        To maintain review quality, only registered customers can leave reviews. 
+                        Please <a href="{% url 'login' %}?next={{ request.path }}" style="color: #04aa6d; font-weight: 700; text-decoration: underline;">log in</a> 
+                        or <a href="{% url 'register' %}?next={{ request.path }}" style="color: #04aa6d; font-weight: 700; text-decoration: underline;">create an account</a> to join the conversation.
+                    </span>
+                </div>
+            </div>
+        {% endif %}
     </div>
     
     {% for review in reviews %}
@@ -176,10 +222,17 @@
         <div class="review-header">
             <div class="review-user-info">
                 <div class="review-avatar">
-                    {{ review.name|slice:":1" }}
+                    {{ review.buyer.username|default:"G"|slice:":1" }}
                 </div>
                 <div>
-                    <span class="review-name">{{ review.name }}</span>
+                    <span class="review-name">
+                        {{ review.buyer.username|default:"Guest User" }}
+                        {% if review.is_verified_purchase %}
+                            <span style="font-size: 11px; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; margin-left: 5px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class="fa fa-check-circle"></i> Verified Purchase
+                            </span>
+                        {% endif %}
+                    </span>
                     <span class="review-date">{{ review.created_at|date:"M d, Y" }}</span>
                 </div>
             </div>
@@ -192,6 +245,11 @@
             </div>
         </div>
         <p class="review-comment">{{ review.comment }}</p>
+
+        <!-- Helpful Voting -->
+        <div id="helpful-button-{{ review.id }}">
+            {% include "shop/components/helpful_button.html" with review=review user_has_voted=review.helpful_votes.all|filter_by_user:user %}
+        </div>
     </div>
     {% empty %}
     <p style="color: #666; font-style: italic;">No reviews yet.</p>

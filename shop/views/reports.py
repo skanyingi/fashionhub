@@ -22,7 +22,7 @@ def inventory(request):
     paid_order_ids = Order.objects.filter(status="PAID").values_list("id", flat=True)
     total_revenue = (
         OrderItem.objects.filter(order_id__in=paid_order_ids).aggregate(
-            total=models.Sum(models.F("quantity") * models.F("price"))
+            total=models.Sum(models.F("quantity") * models.F("unit_price_at_purchase"))
         )["total"]
         or 0
     )
@@ -168,6 +168,7 @@ def run_report_generation():
 
     # 6. Best Sellers Report - products ranked by quantity sold incuding zero sales
     from django.db.models import Sum, F, Q, OuterRef, Subquery
+    from django.db.models.functions import Coalesce
     
     # Get products that have been sold
     products_with_sales = OrderItem.objects.filter(
@@ -188,15 +189,19 @@ def run_report_generation():
         sold_data = OrderItem.objects.filter(
             product=product,
             order__status="PAID"
-        ).aggregate(total_sold=Sum("quantity"))
+        ).aggregate(
+            total_sold=Sum("quantity"),
+            total_revenue=Sum(F("quantity") * F("unit_price_at_purchase"))
+        )
         
         total_sold = sold_data["total_sold"] or 0
+        revenue = sold_data["total_revenue"] or 0
         
         best_sellers_items.append({
             "Product Name": product.name,
             "Selling Price": product.price,
             "Quantity Sold": total_sold,
-            "Revenue": total_sold * product.price,
+            "Revenue": revenue,
             "Current Stock": product.stock
         })
     

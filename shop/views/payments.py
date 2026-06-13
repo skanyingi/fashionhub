@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from shop.models import Product, Order, OrderItem, Receipt, calculate_delivery_fee
+from shop.models import Product, Order, OrderItem, Receipt, Transaction, calculate_delivery_fee
 from shop.utils.mpesa import get_mpesa_access_token
 from shop.utils.pdf import generate_receipt_pdf
 
@@ -136,8 +136,15 @@ def stk_push(request, order_id):
         
         if response_data.get("ResponseCode") == "0":
             # Payment request is sent successfully then store CheckoutRequestID for callback matching 
-            order.checkout_request_id = response_data.get("CheckoutRequestID")
-            order.save()
+            checkout_request_id = response_data.get("CheckoutRequestID")
+            
+            # 3NF Migration: Create a Transaction record
+            Transaction.objects.create(
+                order=order,
+                checkout_request_id=checkout_request_id,
+                amount=order_total,
+                status="PENDING"
+            )
             
             return HttpResponse(f"""
                 <div style="text-align: center; padding: 20px; background: #d4edda; color: #155724; border-radius: 6px; margin: 20px 0;">
@@ -197,19 +204,36 @@ def mpesa_callback(request):
                     mpesa_receipt_num = item.get("Value")
                     break
 
-            # Find the exact order using CheckoutRequestID
+            # Find the exact transaction using CheckoutRequestID
             checkout_request_id = callback.get("CheckoutRequestID")
-            order = None
+            transaction = None
             if checkout_request_id:
-                order = Order.objects.filter(checkout_request_id=checkout_request_id).first()
+                transaction = Transaction.objects.filter(checkout_request_id=checkout_request_id).first()
             
-            # Fallback to latest pending if ID not found especially for older transactions
+            order = None
+            if transaction:
+                order = transaction.order
+            
+            # Final fallback to latest pending if ID not found especially for older transactions
             if not order:
                 order = Order.objects.filter(status="PENDING").order_by("-id").first()
 
             if order and mpesa_receipt_num:
-                #Mark the order as PAID and save receipt number
-                order.mpesa_receipt = mpesa_receipt_num
+                # 3NF Migration: Update or create Transaction record
+                if transaction:
+                    transaction.mpesa_receipt_number = mpesa_receipt_num
+                    transaction.status = "SUCCESS"
+                    transaction.save()
+                else:
+                    Transaction.objects.create(
+                        order=order,
+                        checkout_request_id=checkout_request_id,
+                        mpesa_receipt_number=mpesa_receipt_num,
+                        amount=order.get_grand_total(),
+                        status="SUCCESS"
+                    )
+
+                #Mark the order as PAID
                 order.status = "PAID"
                 order.save()
                 #print(f"✓ Order {order.tracking_number} updated - Receipt: {mpesa_receipt_num}, Status: PAID")
@@ -241,7 +265,7 @@ def mpesa_callback(request):
                     print(f"✗ Platform receipt creation failed: {e}")
 
                 # Send confirmation email (backup)
-                email = order.email or (order.buyer.email if order.buyer else None)
+                email = order.buyer.email if order.buyer else None
                 if email:
                     try:
                         subject = f"Payment Confirmed - FashionHub Order {order.tracking_number}"
@@ -250,7 +274,7 @@ def mpesa_callback(request):
                         html_content = render_to_string("shop/email_receipt.html", {"order": order})
                         
                         # Create email with both text and HTML versions
-                        buyer_name = order.buyer.username if order.buyer else (order.email or "Guest")
+                        buyer_name = order.buyer.username if order.buyer else "Guest"
                         text_message = f"Hi {buyer_name}, your payment for order {order.tracking_number} was successful!"
                         
                         email_msg = EmailMultiAlternatives(
@@ -363,6 +387,17 @@ def test_payment(request, order_id):
     order = get_object_or_404(Order, id=order_id, buyer=request.user)
 
     order.status = "PAID"
-    order.mpesa_receipt = f"TEST{order_id}RECEIPT"
     order.save()
+
+    # 3NF Migration: Create test transaction
+    receipt_num = f"TEST{order_id}RECEIPT"
+    Transaction.objects.get_or_create(
+        order=order,
+        mpesa_receipt_number=receipt_num,
+        defaults={
+            'amount': order.get_grand_total(),
+            'status': 'SUCCESS'
+        }
+    )
+    
     return redirect("cart")

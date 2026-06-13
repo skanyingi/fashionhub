@@ -317,7 +317,7 @@ def sync_order_items(request, order):
                 order=order,
                 product=product,
                 quantity=item.get("quantity", 1),
-                price=product.price,
+                unit_price_at_purchase=product.price,
                 size=item.get("size", ""),
             )
         except Product.DoesNotExist:

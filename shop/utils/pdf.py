@@ -39,14 +39,17 @@ def generate_receipt_pdf(order):
         elements.append(Spacer(1, 0.2 * inch))
         
         # build a two column info box to show order details ans shipping address side by side
+        transaction = order.transactions.filter(status="SUCCESS").order_by("-created_at").first()
+        receipt_num = transaction.mpesa_receipt_number if transaction else 'N/A'
+        
         info_data = [
             [
                 Paragraph("<b>ORDER DETAILS</b>", section_header),
                 Paragraph("<b>SHIPPING TO</b>", section_header)
             ],
             [
-                Paragraph(f"Order Number: <b>{order.tracking_number}</b><br/>M-Pesa Receipt: <b>{order.mpesa_receipt or 'N/A'}</b><br/>Date: {order.created_at.strftime('%b %d, %Y %H:%M')}<br/>Status: <font color='#04AA6D'><b>PAID</b></font>", normal_text),
-                Paragraph(f"Customer: <b>{order.buyer.username if order.buyer else (order.email or 'Guest')}</b><br/>Phone: {order.phone or 'N/A'}<br/>Location: {order.location or 'N/A'}<br/>Address: {order.address or 'N/A'}", normal_text)
+                Paragraph(f"Order Number: <b>{order.tracking_number}</b><br/>M-Pesa Receipt: <b>{receipt_num}</b><br/>Date: {order.created_at.strftime('%b %d, %Y %H:%M')}<br/>Status: <font color='#04AA6D'><b>PAID</b></font>", normal_text),
+                Paragraph(f"Customer: <b>{order.buyer.username if order.buyer else (order.email or 'Guest')}</b><br/>Email: {order.email or (order.buyer.email if order.buyer else 'N/A')}<br/>Phone: {order.phone or 'N/A'}<br/>Location: {order.location or 'N/A'}<br/>Address: {order.address or 'N/A'}", normal_text)
             ]
         ]
         

@@ -20,7 +20,7 @@
                     <td width="50%" valign="top" style="padding-right: 15px;">
                         <h3 style="margin: 0 0 10px 0; color: #333; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Order Details</h3>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Order #:</strong> {{ order.tracking_number }}</p>
-                        <p style="margin: 5px 0; font-size: 14px;"><strong>M-Pesa:</strong> {{ order.mpesa_receipt|default:"N/A" }}</p>
+                        <p style="margin: 5px 0; font-size: 14px;"><strong>M-Pesa:</strong> {{ order.get_mpesa_receipt_number|default:"N/A" }}</p>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Date:</strong> {{ order.created_at|date:"M d, Y" }}</p>
                         <p style="margin: 5px 0; font-size: 14px;"><strong>Status:</strong> <span style="color: #04AA6D; font-weight: bold;">PAID</span></p>
                     </td>

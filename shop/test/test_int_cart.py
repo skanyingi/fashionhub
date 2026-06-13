@@ -3,14 +3,11 @@ from django.urls import reverse
 from ..models import Product
 
 class CartTestCase(TestCase):
+    fixtures = ['test_data.json']
+
     def setUp(self):
         self.client = Client()
-        self.product = Product.objects.create(
-            name='Test Product',
-            price=1000,
-            category='women',
-            stock=10
-        )
+        self.product = Product.objects.get(name='African Dress')
         self.add_url = reverse('add_to_cart')
         self.cart_url = reverse('cart')
         self.update_url = reverse('update_cart')
@@ -26,10 +23,9 @@ class CartTestCase(TestCase):
         self.assertEqual(len(self.client.session['cart']), 1)
 
     def test_add_out_of_stock(self):
-        self.product.stock = 0
-        self.product.save()
+        out_of_stock_product = Product.objects.get(name='Out of Stock Bag')
         response = self.client.post(self.add_url, {
-            'product_id': self.product.id,
+            'product_id': out_of_stock_product.id,
             'quantity': 1
         })
         self.assertEqual(response.status_code, 400)
@@ -39,21 +35,21 @@ class CartTestCase(TestCase):
         session['cart'] = [{
             'product_id': str(self.product.id),
             'name': self.product.name,
-            'price': 1000,
+            'price': 1500,
             'quantity': 2,
             'size': 'M'
         }]
         session.save()
         response = self.client.get(self.cart_url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Test Product')
-        self.assertContains(response, '2000') # 1000 * 2
+        self.assertContains(response, 'African Dress')
+        self.assertContains(response, '3000') 
 
     def test_update_cart(self):
         session = self.client.session
         session['cart'] = [{
             'name': self.product.name,
-            'price': 1000,
+            'price': 1500,
             'quantity': 1
         }]
         session.save()
@@ -68,7 +64,7 @@ class CartTestCase(TestCase):
         session = self.client.session
         session['cart'] = [{
             'name': self.product.name,
-            'price': 1000,
+            'price': 1500,
             'quantity': 1
         }]
         session.save()

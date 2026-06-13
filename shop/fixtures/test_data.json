@@ -1,0 +1,143 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "pbkdf2_sha256$1000000$TaHLuQEqHjUftYzAznKImd$SSR6GhVrgpqEdJHuFCWk5ewznJNwnXlYhQCjXIEkm1A="
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 1,
+    "fields": {
+      "name": "African Dress",
+      "description": "Vibrant colors for outdoors",
+      "price": 1500,
+      "image": "products/w1.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 2,
+    "fields": {
+      "name": "Men Leather Shoes",
+      "description": "Classic formal wear",
+      "price": 2500,
+      "image": "products/m1.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 3,
+    "fields": {
+      "name": "Out of Stock Bag",
+      "description": "Unavailable item",
+      "price": 800,
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 0
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 1,
+    "fields": {
+      "buyer": 1,
+      "location": "Nairobi",
+      "status": "PENDING",
+      "tracking_number": "TRACK123",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 2,
+    "fields": {
+      "buyer": 1,
+      "location": "Mombasa",
+      "status": "PAID",
+      "tracking_number": "TRACK456",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.orderitem",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "product": 1,
+      "quantity": 1,
+      "unit_price_at_purchase": 1500,
+      "size": "M"
+    }
+  },
+  {
+    "model": "shop.orderitem",
+    "pk": 2,
+    "fields": {
+      "order": 2,
+      "product": 2,
+      "quantity": 2,
+      "unit_price_at_purchase": 2500,
+      "size": "42"
+    }
+  },
+  {
+    "model": "shop.transaction",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "checkout_request_id": "REQ123",
+      "amount": 5000,
+      "status": "SUCCESS",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.receipt",
+    "pk": 1,
+    "fields": {
+      "order": 2,
+      "receipt_number": "RCP-UNIQUE-999",
+      "generated_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.report",
+    "pk": 1,
+    "fields": {
+      "report_type": "sales",
+      "title": "Sales Report",
+      "data": {},
+      "generated_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.review",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "buyer": 1,
+      "rating": 5,
+      "comment": "Great!",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.reviewhelpful",
+    "pk": 1,
+    "fields": {
+      "review": 1,
+      "user": 1,
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  }
+]

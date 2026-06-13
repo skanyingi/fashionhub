@@ -16,7 +16,7 @@
       
     </style>
 </head>
-<body x-data="checkoutApp()">
+<body x-data="checkoutApp({ email: '{{ user.email|default:'' }}' })">
 
 <!-- TOP PROMO BAR -->
 <div class="promo-bar">
@@ -348,28 +348,34 @@
                 <!-- Additional Details -->
                 <div class="form-group" x-show="selectedLocation">
                     <label>Apartment/Building/Instructions</label>
-                    <textarea name="address" placeholder="E.g., House No. 12, Gate B, Call on arrival" rows="2"></textarea>
+                    <textarea name="address" placeholder="E.g., House No. 12, Gate B, Call on arrival" rows="2" required></textarea>
                 </div>
 
                 <div class="form-group" x-show="selectedLocation">
                     <label><i class="fa fa-map-pin"></i> Closest Landmark</label>
-                    <input type="text" name="landmark" placeholder="e.g., Near Westgate Mall, Next to KCB Bank, Opposite Uhuru Park">
+                    <input type="text" name="landmark" placeholder="e.g., Near Westgate Mall, Next to KCB Bank, Opposite Uhuru Park" required >
                 </div>
 
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" x-model="email" placeholder="your@email.com" required>
+                    <input type="text" name="email" x-model="email" placeholder="your@email.com" 
+                           pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                           title="Please enter a valid email address (e.g., name@domain.com)"
+                           required>
                 </div>
 
                 <div class="form-group">
                     <label>Phone</label>
-                    <input type="tel" name="phone" placeholder="07XXXXXXXX" required 
+                    <input type="tel" name="phone" placeholder="2547XXXXXXXX" required 
+                           pattern="2547[0-9]{8}"
+                           title="Phone number must start with 2547 and be 12 digits total (e.g., 254717406687)"
                            @input="$el.value = $event.target.value.replace(/[^0-9]/g, '')">
                 </div>
 
-                <button type="button" class="btn-primary" :disabled="!deliveryAvailable" :style="!deliveryAvailable ? 'opacity: 0.5; cursor: not-allowed;' : ''" hx-post="{% url 'update_shipping' %}" hx-include="#shippingForm" hx-swap="none" @click="handleNextClick()">
+                <button type="button" class="btn-primary" :disabled="!deliveryAvailable" :style="!deliveryAvailable ? 'opacity: 0.5; cursor: not-allowed;' : ''" hx-post="{% url 'update_shipping' %}" hx-include="#shippingForm" hx-swap="none" @click="if(document.getElementById('shippingForm').checkValidity()) { handleNextClick() } else { document.getElementById('shippingForm').reportValidity() }">
                     Next <i class="fa fa-arrow-right"></i>
                 </button>
+
             </form>
         </div>
 
@@ -384,12 +390,15 @@
                 <div class="form-group">
                     <label>M-Pesa Number</label>
                     <input type="tel" name="phone" x-model="phone" placeholder="2547XXXXXXXX" required
+                           pattern="2547[0-9]{8}"
+                           title="Phone number must start with 2547 and be exactly 12 digits (e.g., 254717406687)"
                            @input="phone = $event.target.value.replace(/[^0-9]/g, '')">
                 </div>
-                <button type="button" class="btn-primary" @click="if(phone && phone.trim() !== '') { step = 3 } else { document.getElementById('paymentForm').reportValidity() }">
+                <button type="button" class="btn-primary" @click="if(document.getElementById('paymentForm').checkValidity()) { step = 3 } else { document.getElementById('paymentForm').reportValidity() }">
                     Next: Review <i class="fa fa-arrow-right"></i>
                 </button>
             </form>
+
             <button type="button" class="btn-secondary" @click="step = 1">
                 <i class="fa fa-arrow-left"></i> Back
             </button>

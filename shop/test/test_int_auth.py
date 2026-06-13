@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 class AuthTestCase(TestCase):
+    fixtures = ['test_data.json']
+
     def setUp(self):
         self.client = Client()
         self.register_url = reverse('register')
@@ -10,10 +12,10 @@ class AuthTestCase(TestCase):
         self.logout_url = reverse('logout')
         self.index_url = reverse('index')
         self.user_data = {
-            'username': 'testuser',
-            'email': 'test@example.com',
-            'password': 'testpassword123',
-            'confirm_password': 'testpassword123'
+            'username': 'newuser',
+            'email': 'new@test.com',
+            'password': 'password123',
+            'confirm_password': 'password123'
         }
 
     def test_register_page_load(self):
@@ -25,7 +27,7 @@ class AuthTestCase(TestCase):
         response = self.client.post(self.register_url, self.user_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['HX-Redirect'], '/login')
-        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertTrue(User.objects.filter(username='newuser').exists())
 
     def test_register_password_mismatch(self):
         data = self.user_data.copy()
@@ -34,8 +36,10 @@ class AuthTestCase(TestCase):
         self.assertContains(response, 'Passwords do not match')
 
     def test_register_duplicate_username(self):
-        User.objects.create_user(username='testuser', password='password')
-        response = self.client.post(self.register_url, self.user_data)
+        # 'testuser' already exists in fixture
+        data = self.user_data.copy()
+        data['username'] = 'testuser'
+        response = self.client.post(self.register_url, data)
         self.assertContains(response, 'Username already taken')
 
     def test_login_page_load(self):
@@ -44,13 +48,15 @@ class AuthTestCase(TestCase):
         self.assertTemplateUsed(response, 'shop/login.html')
 
     def test_login_success(self):
-        User.objects.create_user(username='testuser', password='testpassword123')
-        response = self.client.post(self.login_url, {
+        # Pass '?next=index' to ensure the 'next' logic triggers in your view
+        response = self.client.post(self.login_url + '?next=index', {
             'username': 'testuser',
             'password': 'testpassword123'
         })
+        # print("Response Headers:", response.headers)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['HX-Redirect'], self.index_url)
+        # The view redirects to 'index' which resolves to '/'
+        self.assertEqual(response.get('HX-Redirect'), '/')
 
     def test_login_invalid_username(self):
         response = self.client.post(self.login_url, {
@@ -60,7 +66,6 @@ class AuthTestCase(TestCase):
         self.assertContains(response, 'Invalid username')
 
     def test_login_invalid_password(self):
-        User.objects.create_user(username='testuser', password='testpassword123')
         response = self.client.post(self.login_url, {
             'username': 'testuser',
             'password': 'wrongpassword'
@@ -68,7 +73,6 @@ class AuthTestCase(TestCase):
         self.assertContains(response, 'Invalid password')
 
     def test_logout(self):
-        User.objects.create_user(username='testuser', password='testpassword123')
         self.client.login(username='testuser', password='testpassword123')
         response = self.client.get(self.logout_url)
         self.assertRedirects(response, self.index_url)

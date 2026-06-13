@@ -16,7 +16,7 @@
         <div>
             <h3 style="margin-top: 0; color: #333; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Order Details</h3>
             <p style="margin: 8px 0;"><strong>Order Number:</strong> {{ order.tracking_number }}</p>
-            <p style="margin: 8px 0;"><strong>M-Pesa Receipt:</strong> {{ order.mpesa_receipt }}</p>
+            <p style="margin: 8px 0;"><strong>M-Pesa Receipt:</strong> {{ order.get_mpesa_receipt_number|default:"N/A" }}</p>
             <p style="margin: 8px 0;"><strong>Date:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
             <p style="margin: 8px 0;"><strong>Status:</strong> <span style="color: #04AA6D; font-weight: bold;">PAID</span></p>
         </div>
