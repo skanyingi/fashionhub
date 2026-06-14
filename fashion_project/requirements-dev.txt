@@ -1,8 +1,0 @@
-Requirement already satisfied: gunicorn in c:\users\user\appdata\local\programs\python\python311\lib\site-packages (23.0.0)
-Collecting whitenoise
-  Downloading whitenoise-6.11.0-py3-none-any.whl.metadata (3.7 kB)
-Collecting python-dotenv
-  Downloading python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
-Collecting psycopg-binary
-  Downloading psycopg_binary-3.3.2-cp311-cp311-win_amd64.whl.metadata (2.7 kB)
-Requirement already satisfied: pip in c:\users\user\appdata\local\programs\python\python311\lib\site-packages (24.0)

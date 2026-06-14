@@ -248,7 +248,7 @@
 
         <!-- Helpful Voting -->
         <div id="helpful-button-{{ review.id }}">
-            {% include "shop/components/helpful_button.html" with review=review user_has_voted=review.helpful_votes.all|filter_by_user:user %}
+            {% include "shop/helpful_button.html" with review=review user_has_voted=review.helpful_votes.all|filter_by_user:user %}
         </div>
     </div>
     {% empty %}

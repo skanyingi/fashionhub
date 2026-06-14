@@ -82,7 +82,7 @@
     </style>
 </head>
 <body>
-{% include "shop/components/header.html" with cart=cart %}
+{% include "shop/header.html" with cart=cart %}
 
 <div class="reports-container">
     <a href="{% url 'index' %}" class="back-link"><i class="fa fa-arrow-left"></i> Back to Home</a>
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-{% include "shop/components/footer.html" %}
+{% include "shop/footer.html" %}
 <script>
 function openNav() { document.getElementById("mySidenav").style.width = "250px"; }
 function closeNav() { document.getElementById("mySidenav").style.width = "0"; }

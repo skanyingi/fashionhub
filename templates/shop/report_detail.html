@@ -82,7 +82,7 @@
     </style>
 </head>
 <body>
-{% include "shop/components/header.html" %}
+{% include "shop/header.html" %}
 
 <div class="report-detail-container">
     <a href="{% url 'reports' %}" class="back-link"><i class="fa fa-arrow-left"></i> Back to Reports</a>
@@ -163,7 +163,7 @@
     {% endif %}
 </div>
 
-{% include "shop/components/footer.html" %}
+{% include "shop/footer.html" %}
 <script>
 function openNav() { document.getElementById("mySidenav").style.width = "250px"; }
 function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
