@@ -276,7 +276,7 @@ def toggle_review_helpful(request, review_id):
     
     # If request is from HTMX, return a partial fragment, otherwise return JSON
     if request.headers.get("HX-Request") == "true":
-        return render(request, "shop/components/helpful_button.html", {
+        return render(request, "shop/helpful_button.html", {
             "review": review,
             "user_has_voted": created
         })
