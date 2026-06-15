@@ -2,7 +2,7 @@
 
 FashionHub is a professional-grade, deployment-ready e-commerce platform built with Python (Django). It features a highly normalized database, robust payment integrations, and automated delivery calculations, specifically designed for the Kenyan fashion retail market.
 
-## 🚀 Key Features
+##  Key Features
 
 - **3NF Database Architecture:** Fully normalized schema ensuring high data integrity and "Price Persistence" (historical price stability).
 - **M-Pesa Integration:** Real-world payment processing using M-Pesa STK Push with automated callback verification.
@@ -68,7 +68,7 @@ FashionHub is a professional-grade, deployment-ready e-commerce platform built w
    python manage.py runserver
    ```
 
-## 🧪 Testing
+##  Testing
 
 FashionHub includes a comprehensive suite of **55 automated tests**. To run the tests:
 
@@ -80,7 +80,7 @@ python manage.py test shop.test
 pytest shop/test/e2e
 ```
 
-## 📊 Database Design (ERD)
+##  Database Design (ERD)
 
 The project follows strict **Third Normal Form (3NF)** principles. Key entities include:
 

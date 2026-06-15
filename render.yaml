@@ -3,7 +3,7 @@ services:
     name: fashionhub
     env: python
     buildCommand: "pip install -r requirements.txt && python manage.py migrate --no-input && python manage.py loaddata shop/fixtures/products.json && python manage.py fix_categories && python manage.py create_admin && python manage.py collectstatic --no-input"
-    startCommand: "gunicorn fashion_project.wsgi --bind 0.0.0.0:$PORT --timeout 120"
+    startCommand: "gunicorn fashion_project.wsgi:application --bind 0.0.0.0:$PORT --timeout 120"
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
