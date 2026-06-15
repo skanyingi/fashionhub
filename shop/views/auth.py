@@ -53,33 +53,26 @@ def register(request):
 # Handle user authentication and login
 def login_user(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
 
-        # Check if username exists in the database
-        try:
-            User.objects.get(username=username)
-            # Username exists, now check password
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                next_url = request.GET.get("next", "index")
-                response = HttpResponse("")
-                # Handle both URLs and full path URLs for redirect
-                if "/" not in next_url:
-                    response["HX-Redirect"] = reverse(next_url)
-                else:
-                    response["HX-Redirect"] = next_url
-                return response
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            next_url = request.GET.get("next", "index")
+            response = HttpResponse("")
+            # Handle both URLs and full path URLs for redirect
+            if "/" not in next_url:
+                response["HX-Redirect"] = reverse(next_url)
             else:
-                # Username exists but password is wrong
-                return HttpResponse(
-                    '<div style="color:red; padding-bottom: 20px;">Invalid password</div>'
-                )
-        except User.DoesNotExist:
-            # username does not exist in the database
+                response["HX-Redirect"] = next_url
+            return response
+        else:
+            # Security Best Practice: Use a generic error message to prevent username enumeration
             return HttpResponse(
-                '<div style="color:red; padding-bottom: 20px;">Invalid username</div>'
+                '<div style="color:red; padding-bottom: 20px;">Invalid username or password</div>'
             )
     #GET request here and display login form with password reset option
     form = PasswordResetForm()

@@ -63,14 +63,14 @@ class AuthTestCase(TestCase):
             'username': 'nonexistent',
             'password': 'password'
         })
-        self.assertContains(response, 'Invalid username')
+        self.assertContains(response, 'Invalid username or password')
 
     def test_login_invalid_password(self):
         response = self.client.post(self.login_url, {
             'username': 'testuser',
             'password': 'wrongpassword'
         })
-        self.assertContains(response, 'Invalid password')
+        self.assertContains(response, 'Invalid username or password')
 
     def test_logout(self):
         self.client.login(username='testuser', password='testpassword123')

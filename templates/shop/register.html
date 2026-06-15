@@ -15,31 +15,69 @@
         <a href="{% url 'index' %}" class="btn-hero">Back to Home</a>
     </div>
     <div class="container">
-           
-            <form  hx-post="{% url 'register' %}" hx-target="#messages" hx-swap="innerHTML" class="auth-card form">
+        <form hx-post="{% url 'register' %}" 
+              hx-target="#messages" 
+              hx-swap="innerHTML" 
+              class="auth-card form" 
+              x-data="{ 
+                  submitted: false, 
+                  username: '', 
+                  email: '', 
+                  pass1: '', 
+                  pass2: '',
+                  isEmailValid() {
+                      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                      return re.test(this.email);
+                  }
+              }"
+              novalidate
+              @submit="submitted = true; if(!$el.checkValidity() || pass1 !== pass2 || !isEmailValid()) { $event.preventDefault(); return false; }">
                 {% csrf_token %} 
 
                 <h2>Create Account</h2>
-                <div id="messages"></div>
+                <div id="messages" style="min-height: 20px;"></div>
+                
                 <div class="form-group">
                     <label for="">UserName:</label>
-                    <input type="text" placeholder="Username" name="username" required> 
-
+                    <input type="text" placeholder="Username" name="username" x-model="username" required
+                           :style="submitted && !username ? 'border-color: #c62828; background: #fff8f8;' : ''"> 
+                    <span x-show="submitted && !username" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please enter a username
+                    </span>
                 </div>
+
                 <div class="form-group">
                     <label for="">Email:</label>
-                    <input type="email"  placeholder="Email" name="email" required> 
-
+                    <input type="email" placeholder="Email" name="email" x-model="email" required
+                           :style="submitted && (!email || !isEmailValid()) ? 'border-color: #c62828; background: #fff8f8;' : ''"> 
+                    <span x-show="submitted && !email" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please enter an email address
+                    </span>
+                    <span x-show="submitted && email && !isEmailValid()" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-times-circle"></i> Please enter a valid email 
                 </div>
+
                 <div class="form-group">
                     <label for="">Password:</label>
-                    <input type="password" placeholder="Password" name="password" required>
+                    <input type="password" placeholder="Password" name="password" x-model="pass1" required
+                           :style="submitted && !pass1 ? 'border-color: #c62828; background: #fff8f8;' : ''">
+                    <span x-show="submitted && !pass1" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please enter a password
+                    </span>
                 </div>
+
                 <div class="form-group">
                     <label for="">Confirm Password:</label>
-                    <input type="password" placeholder="Confirm Password" name="confirm_password" required>
-    
+                    <input type="password" placeholder="Confirm Password" name="confirm_password" x-model="pass2" required
+                           :style="(submitted && !pass2) || (pass1 && pass2 && pass1 !== pass2) ? 'border-color: #c62828; background: #fff8f8;' : ''">
+                    <span x-show="submitted && !pass2" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please confirm your password
+                    </span>
+                    <span x-show="pass1 && pass2 && pass1 !== pass2" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-times-circle"></i> Passwords do not match
+                    </span>
                 </div>
+
                 <button type="submit" class="login-btn">Register</button>
                 
                 <div class="auth-links">

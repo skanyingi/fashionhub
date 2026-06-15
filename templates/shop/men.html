@@ -1,22 +1,28 @@
 {% load static %}
 <!doctype html>
 <html>
-<head>
+  <head>
     <title>Men's Collection - FashionHub</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <style>
       /* Sidenav */
       .sidenav {
         height: 100%;
         width: 0;
         position: fixed;
-        z-index: 9999; 
-        top: 0; 
+        z-index: 9999;
+        top: 0;
         left: 0;
-        background-color: #111; 
+        background-color: #111;
         overflow-x: hidden;
         padding-top: 60px;
         transition: 0.5s;
@@ -47,333 +53,438 @@
         animation: slideIn 0.4s ease-in-out;
       }
     </style>
-</head>
-<body x-data="{ showFilters: true, selectedSubcat: 'all', priceRange: [0, 50000] }" @htmx:after-settle="updateActiveFilter()">
+  </head>
+  <body
+    x-data="{ showFilters: true, selectedSubcat: 'all', priceRange: [0, 50000] }"
+    @htmx:after-settle="updateActiveFilter()"
+  >
+    <!-- TOP PROMO BAR -->
+    <div class="promo-bar">
+      <p>
+        <i class="fa fa-truck"></i> Enjoy free delivery on orders above KES
+        20,000! | <i class="fa fa-gift"></i> Free deliveries within 1km!
+      </p>
+    </div>
 
-<!-- TOP PROMO BAR -->
-<div class="promo-bar">
-    <p><i class="fa fa-truck"></i> Enjoy free delivery on orders above KES 20,000! | <i class="fa fa-gift"></i> Free deliveries within 1km!</p>
-</div>
-
-<!-- HEADER -->
-<header class="main-header">
-    <div class="header-container">
+    <!-- HEADER -->
+    <header class="main-header">
+      <div class="header-container">
         <div class="header-left">
-            <a href="{% url 'index' %}" class="logo">FashionHub</a>
+          <a href="{% url 'index' %}" class="logo">FashionHub</a>
         </div>
         <div class="header-center">
-            <form action="{% url 'search' %}" method="get" class="search-bar">
-                <input type="text" name="q" placeholder="Search for products, brands...">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
+          <form action="{% url 'search' %}" method="get" class="search-bar">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search for products, brands..."
+            />
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
         </div>
         <div class="header-right">
-            <div class="header-actions">
-                {% if user.is_authenticated %}
-                <a href="#" class="header-action">
-                    <i class="fa fa-user"></i>
-                    <span>{{ user.username|truncatechars:8 }}</span>
-                </a>
-                <form method="post" action="{% url 'logout' %}" style="display:inline">
-                    {% csrf_token %}
-                    <button type="submit" class="header-action" style="background:none;border:none;cursor:pointer">
-                        <i class="fa fa-sign-out"></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
-                {% else %}
-                <a href="{% url 'login' %}?next={{ request.path }}" class="header-action">
-                    <i class="fa fa-user"></i>
-                    <span>Account</span>
-                </a>
-                {% endif %}
-                <a href="{% url 'cart' %}" class="header-action" id="cart-icon">
-                    <i class="fa fa-shopping-cart"></i>
-                    {% if cart|length > 0 %}
-                    <span class="cart-count">{{ cart|length }}</span>
-                    {% endif %}
-                    <span>Cart</span>
-                </a>
-            </div>
+          <div class="header-actions">
+            {% if user.is_authenticated %}
+            <a href="#" class="header-action">
+              <i class="fa fa-user"></i>
+              <span>{{ user.username|truncatechars:8 }}</span>
+            </a>
+            <form
+              method="post"
+              action="{% url 'logout' %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="header-action"
+                style="background: none; border: none; cursor: pointer"
+              >
+                <i class="fa fa-sign-out"></i>
+                <span>Logout</span>
+              </button>
+            </form>
+            {% else %}
+            <a
+              href="{% url 'login' %}?next={{ request.path }}"
+              class="header-action"
+            >
+              <i class="fa fa-user"></i>
+              <span>Account</span>
+            </a>
+            {% endif %}
+            <a href="{% url 'cart' %}" class="header-action" id="cart-icon">
+              <i class="fa fa-shopping-cart"></i>
+              {% if cart|length > 0 %}
+              <span class="cart-count">{{ cart|length }}</span>
+              {% endif %}
+              <span>Cart</span>
+            </a>
+          </div>
         </div>
-    </div>
-</header>
+      </div>
+    </header>
 
-<!-- NAVIGATION -->
-<nav class="main-nav" x-data="{ menuOpen: false }" x-init="$watch('menuOpen', val => val ? openNav() : closeNav())">
-    <div class="nav-container">
-        <button class="hamburger" :class="{ 'active': menuOpen }" @click="menuOpen = !menuOpen" aria-label="Toggle menu">
-            <span></span>
-            <span></span>
-            <span></span>
+    <!-- NAVIGATION -->
+    <nav
+      class="main-nav"
+      x-data="{ menuOpen: false }"
+      x-init="$watch('menuOpen', val => val ? openNav() : closeNav())"
+    >
+      <div class="nav-container">
+        <button
+          class="hamburger"
+          :class="{ 'active': menuOpen }"
+          @click="menuOpen = !menuOpen"
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
 
         <div id="mySidenav" class="sidenav" x-data="{ currentMenu: 'main' }">
-            <div x-show="currentMenu === 'main'" class="menu-section">
-                <a href="{% url 'index' %}" @click="menuOpen = false">Home</a>
-                <a href="javascript:void(0)" @click="currentMenu = 'women'">Women <i class="fa fa-chevron-right"></i></a>
-                <a href="javascript:void(0)" @click="currentMenu = 'men'">Men <i class="fa fa-chevron-right"></i></a>
-                <a href="{% url 'cart' %}" @click="menuOpen = false">Cart</a>
-                {% if user.is_authenticated %}
-                <!-- <a href="{% url 'cart' %}" @click="menuOpen = false">Cart</a> -->
-                <a href="{% url 'my_receipts' %}" @click="menuOpen = false">My Receipts</a>
-                {% endif %}
-            </div>
-            <div x-show="currentMenu === 'women'" class="menu-section">
-                <a href="javascript:void(0)" @click="currentMenu = 'main'"><i class="fa fa-chevron-left"></i> Back</a>
-                <a href="{% url 'women' %}?sub=clothing" @click="menuOpen = false">Clothing</a>
-                <a href="{% url 'women' %}?sub=shoes" @click="menuOpen = false">Shoes</a>
-                <a href="{% url 'women' %}?sub=handbags" @click="menuOpen = false">Handbags</a>
-            </div>
-            <div x-show="currentMenu === 'men'" class="menu-section">
-                <a href="javascript:void(0)" @click="currentMenu = 'main'"><i class="fa fa-chevron-left"></i> Back</a>
-                <a href="{% url 'men' %}?sub=clothing" @click="menuOpen = false">Clothing</a>
-                <a href="{% url 'men' %}?sub=shoes" @click="menuOpen = false">Shoes</a>
-                <a href="{% url 'men' %}?sub=watches" @click="menuOpen = false">Watches</a>
-            </div>
+          <div x-show="currentMenu === 'main'" class="menu-section">
+            <a href="{% url 'index' %}" @click="menuOpen = false">Home</a>
+            <a href="javascript:void(0)" @click="currentMenu = 'women'"
+              >Women <i class="fa fa-chevron-right"></i
+            ></a>
+            <a href="javascript:void(0)" @click="currentMenu = 'men'"
+              >Men <i class="fa fa-chevron-right"></i
+            ></a>
+            <a href="{% url 'cart' %}" @click="menuOpen = false">Cart</a>
+            {% if user.is_authenticated %}
+            <!-- <a href="{% url 'cart' %}" @click="menuOpen = false">Cart</a> -->
+            <a href="{% url 'my_receipts' %}" @click="menuOpen = false"
+              >My Receipts</a
+            >
+            {% endif %}
+          </div>
+          <div x-show="currentMenu === 'women'" class="menu-section">
+            <a href="javascript:void(0)" @click="currentMenu = 'main'"
+              ><i class="fa fa-chevron-left"></i> Back</a
+            >
+            <a href="{% url 'women' %}?sub=clothing" @click="menuOpen = false"
+              >Clothing</a
+            >
+            <a href="{% url 'women' %}?sub=shoes" @click="menuOpen = false"
+              >Shoes</a
+            >
+            <a href="{% url 'women' %}?sub=handbags" @click="menuOpen = false"
+              >Handbags</a
+            >
+          </div>
+          <div x-show="currentMenu === 'men'" class="menu-section">
+            <a href="javascript:void(0)" @click="currentMenu = 'main'"
+              ><i class="fa fa-chevron-left"></i> Back</a
+            >
+            <a href="{% url 'men' %}?sub=clothing" @click="menuOpen = false"
+              >Clothing</a
+            >
+            <a href="{% url 'men' %}?sub=shoes" @click="menuOpen = false"
+              >Shoes</a
+            >
+            <a href="{% url 'men' %}?sub=watches" @click="menuOpen = false"
+              >Watches</a
+            >
+          </div>
         </div>
-        
-        <ul class="nav-links" :class="{ 'mobile-open': menuOpen }">
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="{% url 'women' %}">Women</a></li>
-            <li><a href="{% url 'men' %}" class="active-nav">Men</a></li>
-        </ul>
-    </div>
-</nav>
 
-<!-- BREADCRUMBS -->
-<div class="breadcrumbs">
-    <div class="breadcrumb-container">
+        <ul class="nav-links" :class="{ 'mobile-open': menuOpen }">
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="{% url 'women' %}">Women</a></li>
+          <li><a href="{% url 'men' %}" class="active-nav">Men</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- BREADCRUMBS -->
+    <div class="breadcrumbs">
+      <div class="breadcrumb-container">
         <a href="{% url 'index' %}">Home</a>
         <span>/</span>
         <span class="current">Men's Collection</span>
+      </div>
     </div>
-</div>
 
-<!-- PAGE BANNER -->
-<section class="page-banner men-banner">
-    <div class="page-banner-content">
+    <!-- PAGE BANNER -->
+    <section class="page-banner men-banner">
+      <div class="page-banner-content">
         <h1>Men's Collection</h1>
         <p>Discover the latest trends in men's fashion</p>
         <div class="banner-stats">
-            <div class="stat">
-                <span class="stat-number">{{ products|length }}</span>
-                <span class="stat-label">Products</span>
-            </div>
-            <div class="stat">
-                <span class="stat-number">3</span>
-                <span class="stat-label">Categories</span>
-            </div>
+          <div class="stat">
+            <span class="stat-number">{{ products|length }}</span>
+            <span class="stat-label">Products</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">3</span>
+            <span class="stat-label">Categories</span>
+          </div>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
-<!-- MAIN CONTENT -->
-<main class="shop-main">
-    <!-- SIDEBAR FILTERS -->
-    <aside class="shop-sidebar" x-show="showFilters" x-transition>
+    <!-- MAIN CONTENT -->
+    <main class="shop-main">
+      <!-- SIDEBAR FILTERS -->
+      <aside class="shop-sidebar" x-show="showFilters" x-transition>
         <div class="filter-section">
-            <h3><i class="fa fa-filter"></i> Filters</h3>
-            
-            <!-- Categories -->
-            <div class="filter-group">
-                <h4>Categories</h4>
-                <ul class="filter-list">
-                    <li>
-                        <a hx-get="{% url 'men' %}" hx-target="#product-grid" hx-swap="innerHTML" 
-                           class="filter-item"
-                           data-sub="all"
-                           @click="selectedSubcat = 'all'"
-                           :class="{'active-filter': selectedSubcat === 'all'}">
-                            <i class="fa fa-th-large"></i> All Products <span class="filter-count">({{ products|length }})</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a hx-get="{% url 'men' %}?sub=clothing" hx-target="#product-grid" hx-swap="innerHTML"
-                           class="filter-item"
-                           data-sub="clothing"
-                           @click="selectedSubcat = 'clothing'"
-                           :class="{'active-filter': selectedSubcat === 'clothing'}">
-                            <i class="fa fa-angle-right"></i> Clothing <span class="filter-count">(26)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a hx-get="{% url 'men' %}?sub=shoes" hx-target="#product-grid" hx-swap="innerHTML"
-                           class="filter-item"
-                           data-sub="shoes"
-                           @click="selectedSubcat = 'shoes'"
-                           :class="{'active-filter': selectedSubcat === 'shoes'}">
-                            <i class="fa fa-angle-right"></i> Shoes <span class="filter-count">(20)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a hx-get="{% url 'men' %}?sub=watches" hx-target="#product-grid" hx-swap="innerHTML"
-                           class="filter-item"
-                           data-sub="watches"
-                           @click="selectedSubcat = 'watches'"
-                           :class="{'active-filter': selectedSubcat === 'watches'}">
-                            <i class="fa fa-angle-right"></i> Watches <span class="filter-count">(23)</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+          <h3><i class="fa fa-filter"></i> Filters</h3>
 
-            <!-- Price Range -->
-            <div class="filter-group">
-                <h4>Price Range</h4>
-                <form method="get" hx-get="{% url 'men' %}" hx-target="#product-grid" hx-swap="innerHTML" hx-push-url="true">
-                    {% if subcategory %}
-                    <input type="hidden" name="sub" value="{{ subcategory }}">
-                    {% endif %}
-                    <div class="price-inputs">
-                        <input type="number" name="min_price" placeholder="Min" value="{{ min_price|default:'' }}">
-                        <span>-</span>
-                        <input type="number" name="max_price" placeholder="Max" value="{{ max_price|default:'' }}">
-                    </div>
-                    <button type="submit" class="apply-filter-btn">Apply</button>
-                </form>
-            </div>
+          <!-- Categories -->
+          <div class="filter-group">
+            <h4>Categories</h4>
+            <ul class="filter-list">
+              <li>
+                <a
+                  hx-get="{% url 'men' %}"
+                  hx-target="#product-grid"
+                  hx-swap="innerHTML"
+                  class="filter-item"
+                  data-sub="all"
+                  @click="selectedSubcat = 'all'"
+                  :class="{'active-filter': selectedSubcat === 'all'}"
+                >
+                  <i class="fa fa-th-large"></i> All Products
+                  <span class="filter-count">({{ products|length }})</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  hx-get="{% url 'men' %}?sub=clothing"
+                  hx-target="#product-grid"
+                  hx-swap="innerHTML"
+                  class="filter-item"
+                  data-sub="clothing"
+                  @click="selectedSubcat = 'clothing'"
+                  :class="{'active-filter': selectedSubcat === 'clothing'}"
+                >
+                  <i class="fa fa-angle-right"></i> Clothing
+                  <span class="filter-count">(26)</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  hx-get="{% url 'men' %}?sub=shoes"
+                  hx-target="#product-grid"
+                  hx-swap="innerHTML"
+                  class="filter-item"
+                  data-sub="shoes"
+                  @click="selectedSubcat = 'shoes'"
+                  :class="{'active-filter': selectedSubcat === 'shoes'}"
+                >
+                  <i class="fa fa-angle-right"></i> Shoes
+                  <span class="filter-count">(20)</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  hx-get="{% url 'men' %}?sub=watches"
+                  hx-target="#product-grid"
+                  hx-swap="innerHTML"
+                  class="filter-item"
+                  data-sub="watches"
+                  @click="selectedSubcat = 'watches'"
+                  :class="{'active-filter': selectedSubcat === 'watches'}"
+                >
+                  <i class="fa fa-angle-right"></i> Watches
+                  <span class="filter-count">(23)</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
-            <!-- Clear Filters -->
-            <a href="{% url 'men' %}" class="clear-filters">
-                <i class="fa fa-times"></i> Clear All Filters
-            </a>
+          <!-- Price Range -->
+          <div class="filter-group">
+            <h4>Price Range</h4>
+            <form
+              method="get"
+              hx-get="{% url 'men' %}"
+              hx-target="#product-grid"
+              hx-swap="innerHTML"
+              hx-push-url="true"
+            >
+              {% if subcategory %}
+              <input type="hidden" name="sub" value="{{ subcategory }}" />
+              {% endif %}
+              <div class="price-inputs">
+                <input
+                  type="number"
+                  name="min_price"
+                  placeholder="Min"
+                  value="{{ min_price|default:'' }}"
+                />
+                <span>-</span>
+                <input
+                  type="number"
+                  name="max_price"
+                  placeholder="Max"
+                  value="{{ max_price|default:'' }}"
+                />
+              </div>
+              <button type="submit" class="apply-filter-btn">Apply</button>
+            </form>
+          </div>
+
+          <!-- Clear Filters -->
+          <a href="{% url 'men' %}" class="clear-filters">
+            <i class="fa fa-times"></i> Clear All Filters
+          </a>
         </div>
-    </aside>
+      </aside>
 
-    <!-- PRODUCTS AREA -->
-    <section class="shop-products">
+      <!-- PRODUCTS AREA -->
+      <section class="shop-products">
         <!-- Toolbar -->
         <div class="products-toolbar">
-            <div class="toolbar-left">
-                <button class="filter-toggle" @click="showFilters = !showFilters">
-                    <i class="fa fa-sliders"></i> Filters
-                </button>
-                <span class="results-count">Showing <strong>{{ products|length }}</strong> products</span>
+          <div class="toolbar-left">
+            <button class="filter-toggle" @click="showFilters = !showFilters">
+              <i class="fa fa-sliders"></i> Filters
+            </button>
+            <span class="results-count"
+              >Showing <strong>{{ products|length }}</strong> products</span
+            >
+          </div>
+          <div class="toolbar-right">
+            <div class="sort-dropdown">
+              <label>Sort by:</label>
+              <select onchange="window.location.href = this.value">
+                <option value="?sort=default">Featured</option>
+                <option value="?sort=low-to-high">Price: Low to High</option>
+                <option value="?sort=high-to-low">Price: High to Low</option>
+                <option value="?sort=newest">Newest First</option>
+              </select>
             </div>
-            <div class="toolbar-right">
-                <div class="sort-dropdown">
-                    <label>Sort by:</label>
-                    <select onchange="window.location.href=this.value">
-                        <option value="?sort=default">Featured</option>
-                        <option value="?sort=low-to-high">Price: Low to High</option>
-                        <option value="?sort=high-to-low">Price: High to Low</option>
-                        <option value="?sort=newest">Newest First</option>
-                    </select>
-                </div>
-            </div>
+          </div>
         </div>
 
         <!-- Product Grid -->
         <div class="product-grid modern-grid" id="product-grid">
-            {% include 'shop/product_grid.html' %}
+          {% include 'shop/product_grid.html' %}
         </div>
 
         <!-- Pagination -->
-        <div class="pagination" style="display: none;">
-            <button class="page-btn" disabled><i class="fa fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn"><i class="fa fa-chevron-right"></i></button>
+        <div class="pagination" style="display: none">
+          <button class="page-btn" disabled>
+            <i class="fa fa-chevron-left"></i>
+          </button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn"><i class="fa fa-chevron-right"></i></button>
         </div>
-    </section>
-</main>
+      </section>
+    </main>
 
-<!-- NEWSLETTER -->
-<section class="subs" x-data="{ email: '', showPopup: false }">
-    <h1>Stay in Style</h1>
-    <p>Subscribe to our newsletter for exclusive offers</p>
-    <form @submit.prevent="showPopup = true; setTimeout(() => showPopup = false, 2000)">
+    <!-- NEWSLETTER -->
+    <section class="subs" x-data="{ email: '', showPopup: false }">
+      <h1>Stay in Style</h1>
+      <p>Subscribe to our newsletter for exclusive offers</p>
+      <form
+        @submit.prevent="showPopup = true; setTimeout(() => showPopup = false, 2000)"
+      >
         {% csrf_token %}
-        <input type="email" name="email" x-model="email" placeholder="Enter your email" class="email" required>
+        <input
+          type="email"
+          name="email"
+          x-model="email"
+          placeholder="Enter your email"
+          class="email"
+          required
+        />
         <button type="submit" class="btn-banner btn-subs">Subscribe</button>
-    </form>
-</section>
+      </form>
+    </section>
 
-<!-- FOOTER -->
-<footer class="footer-section">
-    <div class="footer-grid">
+    <!-- FOOTER -->
+    <footer class="footer-section">
+      <div class="footer-grid">
         <div class="footer-col">
-            <h3>FashionHub</h3>
-            <p>Your destination for premium fashion</p>
-            <div class="social-links">
-                <a href="#"><i class="fa fa-facebook"></i></a>
-                <a href="#"><i class="fa fa-instagram"></i></a>
-                <a href="#"><i class="fa fa-twitter"></i></a>
-                <a href="#"><i class="fa fa-youtube"></i></a>
-            </div>
+          <h3>FashionHub</h3>
+          <p>Your destination for premium fashion</p>
+          <div class="social-links">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-youtube"></i></a>
+          </div>
         </div>
         <div class="footer-col">
-            <h3>Help</h3>
-            <p><a href="{% url 'faq' %}">FAQ</a></p>
-            <p><a href="{% url 'shipping_info' %}">Shipping Info</a></p>
-            <p><a href="{% url 'returns' %}">Returns</a></p>
-            <p><a href="{% url 'contact' %}">Contact Us</a></p>
+          <h3>Help</h3>
+          <p><a href="{% url 'faq' %}">FAQ</a></p>
+          <p><a href="{% url 'shipping_info' %}">Shipping Info</a></p>
+          <p><a href="{% url 'returns' %}">Returns</a></p>
+          <p><a href="{% url 'contact' %}">Contact Us</a></p>
         </div>
         <div class="footer-col">
-            <h3>About</h3>
-            <p><a href="#">About Us</a></p>
-            <!-- <p><a href="#">Careers</a></p>
-            <p><a href="#">Store Locator</a></p> -->
+          <h3>About</h3>
+          <p><a href="#">About Us</a></p>
         </div>
         <div class="footer-col">
-            <h3>Customer Service</h3>
-            <p><a href="{% url 'track_order' %}">Track Order</a></p>
-            
+          <h3>Customer Service</h3>
+          <p><a href="{% url 'track_order' %}">Track Order</a></p>
         </div>
-    </div>
-    <hr>
-    <div class="footer-bottom">
+      </div>
+      <hr />
+      <div class="footer-bottom">
         <p>&copy; 2026 FashionHub. All rights reserved</p>
         <div class="payment-methods">
-            <span>We accept:</span>
-            <i class="fa fa-mobile"></i>
-            <span style="font-weight:bold;color:#04AA6D;">M-Pesa</span>
+          <span>We accept:</span>
+          <i class="fa fa-mobile"></i>
+          <span style="font-weight: bold; color: #04aa6d">M-Pesa</span>
         </div>
-    </div>
-</footer>
+      </div>
+    </footer>
 
-<script src="{% static 'js/main.js' %}"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const counts = {
-        'all': 69,
-        'clothing': 26,
-        'shoes': 20,
-        'watches': 23
-    };
-    document.querySelectorAll('.filter-item').forEach(function(link) {
-        link.addEventListener('click', function() {
-            const sub = this.getAttribute('data-sub') || 'all';
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const counts = {
+          all: 69,
+          clothing: 26,
+          shoes: 20,
+          watches: 23,
+        };
+        document.querySelectorAll(".filter-item").forEach(function (link) {
+          link.addEventListener("click", function () {
+            const sub = this.getAttribute("data-sub") || "all";
             const count = counts[sub] || 0;
             const name = sub.charAt(0).toUpperCase() + sub.slice(1);
-            document.querySelector('.results-count').innerHTML = 
-                'Showing <strong>' + name + '</strong> - <strong>' + count + '</strong> products';
-            
+            document.querySelector(".results-count").innerHTML =
+              "Showing <strong>" +
+              name +
+              "</strong> - <strong>" +
+              count +
+              "</strong> products";
+
             // Update hidden sub input in price form
-            const form = document.querySelector('.filter-group form');
+            const form = document.querySelector(".filter-group form");
             if (form) {
-                let hiddenInput = form.querySelector('input[name="sub"]');
-                if (sub === 'all') {
-                    if (hiddenInput) hiddenInput.remove();
-                } else {
-                    if (!hiddenInput) {
-                        hiddenInput = document.createElement('input');
-                        hiddenInput.type = 'hidden';
-                        hiddenInput.name = 'sub';
-                        form.insertBefore(hiddenInput, form.firstChild);
-                    }
-                    hiddenInput.value = sub;
+              let hiddenInput = form.querySelector('input[name="sub"]');
+              if (sub === "all") {
+                if (hiddenInput) hiddenInput.remove();
+              } else {
+                if (!hiddenInput) {
+                  hiddenInput = document.createElement("input");
+                  hiddenInput.type = "hidden";
+                  hiddenInput.name = "sub";
+                  form.insertBefore(hiddenInput, form.firstChild);
                 }
+                hiddenInput.value = sub;
+              }
             }
+          });
         });
-    });
-});
-</script>
-<script>
-function openNav() { document.getElementById("mySidenav").style.width = "250px"; }
-function closeNav() { document.getElementById("mySidenav").style.width = "0"; }
-</script>
-</body>
+      });
+    </script>
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+      }
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+    </script>
+  </body>
 </html>

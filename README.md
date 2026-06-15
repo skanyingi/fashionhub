@@ -1,46 +1,92 @@
-# FashionHub Project
+# FashionHub E-Commerce Platform
 
-This project is a Django-based fashion e-commerce application.
+FashionHub is a professional-grade, deployment-ready e-commerce platform built with Python (Django). It features a highly normalized database, robust payment integrations, and automated delivery calculations, specifically designed for the Kenyan fashion retail market.
 
-## How to Transfer to Another Laptop
+## 🚀 Key Features
 
-To move this project to a new computer while keeping all your products, users, and data, follow these steps:
+- **3NF Database Architecture:** Fully normalized schema ensuring high data integrity and "Price Persistence" (historical price stability).
+- **M-Pesa Integration:** Real-world payment processing using M-Pesa STK Push with automated callback verification.
+- **Geospatial Logistics:** Real-time delivery fee calculation using the Google Maps API based on precise customer location.
+- **Professional Review System:** Features 'Verified Purchase' badges and peer-voted 'Helpful' engagement logic.
+- **Admin BI Dashboard:** Automated reporting suite for sales analysis, inventory tracking, and low-stock alerts.
+- **Real-time UI:** Powered by Alpine.js and HTMX for an "App-like" experience with partial-page updates.
+- **Automated Document Generation:** Instant PDF receipt generation and email dispatch upon successful payment.
 
-### 1. On your CURRENT Laptop:
-1.  **Export the Data**: Open PowerShell in the project folder and run:
-    ```powershell
-    .\export_data.ps1
-    ```
-    This creates a file called `data.json` with all your database information.
-2.  **Zip the Project**: Compress the project folder. **Make sure `data.json` is included in the zip**. (You can exclude the `.venv` folder to save space).
-3.  **Move the Zip**: Transfer the zip file to your new laptop (USB, Cloud, etc.).
+## 🛠 Tech Stack
 
-### 2. On your NEW Laptop:
-1.  **Extract**: Unzip the folder.
-2.  **Run Setup**: Open PowerShell in the project folder and run:
-    ```powershell
-    .\setup.ps1
-    ```
-    The setup script will automatically:
-    - Create a virtual environment and install packages.
-    - Create your configuration (`.env`).
-    - Run database migrations.
-    - **Automatically import your data from `data.json`**.
-    - Collect static files.
+- **Backend:** Python 3.11, Django 5.2
+- **Frontend:** HTML5, CSS3, Alpine.js, HTMX
+- **Database:** PostgreSQL (with 3NF normalization)
+- **APIs:** M-Pesa Daraja API, Google Maps Platform
+- **Testing:** Pytest, Playwright (E2E), Django TestCase
+- **Infrastructure:** Gunicorn, WhiteNoise, Render (Deployment)
 
-## Running the Project
+## 🏁 Getting Started
 
-Once setup is complete, you can start the development server:
+### Prerequisites
 
-1.  **Activate Environment**:
-    - Windows: `.\.venv\Scripts\activate`
-    - Linux/macOS: `source .venv/bin/activate`
-2.  **Start Server**:
-    ```bash
-    python manage.py runserver
-    ```
+- Python 3.11+
+- PostgreSQL
+- Google Maps API Key
+- M-Pesa Consumer Key/Secret
 
-## Prerequisites
+### Installation
 
-- **Python 3.11+**: Ensure Python is installed on the new laptop.
-- **PostgreSQL**: This project is configured to use PostgreSQL. Make sure you have PostgreSQL installed and a database named `fashionhub` created before running the setup script.
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   cd FashionV3
+   ```
+
+2. **Set up Virtual Environment:**
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+   ```
+
+3. **Install Dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   playwright install
+   ```
+
+4. **Configure Environment:**
+   Create a `.env` file in the root directory and provide your API keys and database credentials.
+
+5. **Run Migrations & Initialize:**
+
+   ```bash
+   python manage.py migrate
+   python manage.py loaddata shop/fixtures/products.json
+   ```
+
+6. **Start Server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+## 🧪 Testing
+
+FashionHub includes a comprehensive suite of **55 automated tests**. To run the tests:
+
+```bash
+# Run all tests
+python manage.py test shop.test
+
+# Run E2E tests (Playwright)
+pytest shop/test/e2e
+```
+
+## 📊 Database Design (ERD)
+
+The project follows strict **Third Normal Form (3NF)** principles. Key entities include:
+
+- **User/Buyer:** Authenticated customers.
+- **Order & OrderItem:** Business contracts with price persistence.
+- **Transaction:** Decoupled financial records for payment auditing.
+- **Review & ReviewHelpful:** Social interaction and feedback.
+
+---

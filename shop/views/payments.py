@@ -59,10 +59,7 @@ def stk_push(request, order_id):
 
     # Get grand total to charge via M-Pesa
     total_amount = order.get_grand_total()
-    
-    # Debug statement to log to verify calculation 
-    #print(f"STK Push: Subtotal={order.get_total_amount()}, Delivery={order.delivery_fee}, Total={total_amount}")
-    
+  
     # Generate M-Pesa API authentication timestamp and password
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     password = base64.b64encode(
@@ -219,7 +216,7 @@ def mpesa_callback(request):
                 order = Order.objects.filter(status="PENDING").order_by("-id").first()
 
             if order and mpesa_receipt_num:
-                # 3NF Migration: Update or create Transaction record
+                #  Update or create Transaction record
                 if transaction:
                     transaction.mpesa_receipt_number = mpesa_receipt_num
                     transaction.status = "SUCCESS"
@@ -236,7 +233,7 @@ def mpesa_callback(request):
                 #Mark the order as PAID
                 order.status = "PAID"
                 order.save()
-                #print(f"✓ Order {order.tracking_number} updated - Receipt: {mpesa_receipt_num}, Status: PAID")
+                #print(f" Order {order.tracking_number} updated - Receipt: {mpesa_receipt_num}, Status: PAID")
 
                 # decrement stock for each product in the order
                 for item in order.items.all():
@@ -244,9 +241,9 @@ def mpesa_callback(request):
                     if product.stock >= item.quantity:
                         product.stock -= item.quantity
                         product.save()
-                        #print(f"  - Stock updated for {product.name}: {product.stock} left")
+                        print(f"  - Stock updated for {product.name}: {product.stock} left")
                     else:
-                        #print(f"  - Warning: Low stock for {product.name} ({product.stock} left), cannot decrement fully")
+                        print(f"  - Warning: Low stock for {product.name} ({product.stock} left), cannot decrement fully")
                         product.stock = 0 # Stock Insufficient - set to zero
                         product.save()
 
@@ -258,11 +255,11 @@ def mpesa_callback(request):
                         pdf_file=pdf_buffer.getvalue() if pdf_buffer else None,
                     )
                     print(
-                        f"✓ Platform receipt created: {platform_receipt.receipt_number}"
+                        f" Platform receipt created: {platform_receipt.receipt_number}"
                     )
 
                 except Exception as e:
-                    print(f"✗ Platform receipt creation failed: {e}")
+                    print(f" Platform receipt creation failed: {e}")
 
                 # Send confirmation email (backup)
                 email = order.buyer.email if order.buyer else None
@@ -289,9 +286,9 @@ def mpesa_callback(request):
                                 "application/pdf",
                             )
                         email_msg.send(fail_silently=False)
-                        print(f"✓ Receipt HTML email sent to {email}")
+                        print(f" Receipt HTML email sent to {email}")
                     except Exception as e:
-                        print(f"✗ Email sending failed: {e}")
+                        print(f" Email sending failed: {e}")
             else:
                 print("No pending order found or no receipt number")
         else:
@@ -376,20 +373,20 @@ def download_receipt_pdf(request, order_id):
         return response
     else:
         return HttpResponse(
-            "Error generating PDF. Please install reportlab: pip install reportlab",
+            "Error generating PDF.",
             status=500,
         )
 
 # tesing endpoint to simulate successful payment
 @login_required(login_url="login")
 def test_payment(request, order_id):
-    """Test endpoint to simulate successful payment (FOR TESTING ONLY)"""
+    """Test endpoint to simulate successful payment """
     order = get_object_or_404(Order, id=order_id, buyer=request.user)
 
     order.status = "PAID"
     order.save()
 
-    # 3NF Migration: Create test transaction
+    # Create test transaction
     receipt_num = f"TEST{order_id}RECEIPT"
     Transaction.objects.get_or_create(
         order=order,

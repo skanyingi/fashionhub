@@ -15,23 +15,36 @@
         <a href="{% url 'index' %}" class="btn-hero">Back to Home</a>
     </div>
     <div class="container">
-        <div class="auth-card" x-data="{ tab: 'login',  forgotOpen: false }">
+        <div class="auth-card" x-data="{ tab: 'login', forgotOpen: false, submitted: false, username: '', password: '' }">
             
-            <form  hx-post="{% url 'login' %}?next={{ request.GET.next|default:'index' }}" 
+            <form hx-post="{% url 'login' %}?next={{ request.GET.next|default:'index' }}" 
                     hx-target="#messages"
                     hx-swap="innerHTML"
-                     class="form">
+                    hx-on::before-request="if(!this.checkValidity()) { event.preventDefault(); }"
+                    @submit="submitted = true; document.getElementById('messages').innerHTML = '';"
+                    class="form" novalidate>
                 {% csrf_token %}
                 <h2>Welcome back</h2>
-                <div id="messages"></div>
+                <div id="messages" style="min-height: 20px;"></div>
+                
                 <div class="form-group">
                     <label for="">Username:</label> 
-                    <input type="text" placeholder="Username" name="username"> 
+                    <input type="text" placeholder="Username" name="username" x-model="username" required
+                           :style="submitted && !username ? 'border-color: #c62828; background: #fff8f8;' : ''">
+                    <span x-show="submitted && !username" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please fill in your username
+                    </span>
                 </div>
+                
                 <div class="form-group">
                     <label for="">Password:</label> 
-                    <input type="password" placeholder="Password" name="password"> 
+                    <input type="password" placeholder="Password" name="password" x-model="password" required
+                           :style="submitted && !password ? 'border-color: #c62828; background: #fff8f8;' : ''">
+                    <span x-show="submitted && !password" style="color: #c62828; font-size: 12px; margin-top: 5px; display: block; font-weight: 600;">
+                        <i class="fa fa-exclamation-circle"></i> Please fill in your password
+                    </span>
                 </div>
+                
                 <button type="submit" class="login-btn">Login </button>
                 
                 <div class="auth-links">
@@ -46,14 +59,18 @@
                 class="modal-overlay"
                 @click.self = "forgotOpen = false"
                 x-transition
+                x-data="{ resetLoading: false }"
             >
                 <div class="modal">
                     <h3>Reset your Password</h3>
                     <p>Enter your email and we'll send a reset link</p>
-                    <form method="post" action="{% url 'password_reset' %}">
+                    <form method="post" action="{% url 'password_reset' %}" @submit="resetLoading = true">
                         {% csrf_token %}
                         {{ form.as_p }}
-                        <button type="submit" class="btn">Send Reset Link</button>
+                        <button type="submit" class="btn" :disabled="resetLoading" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <span x-show="!resetLoading">Send Reset Link</span>
+                            <span x-show="resetLoading"><i class="fa fa-spinner fa-spin"></i> Sending...</span>
+                        </button>
                     </form>
                     <button class="close-btn" @click="forgotOpen=false"> x </button>
                 </div>
