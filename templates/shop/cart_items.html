@@ -67,7 +67,7 @@
   {% endif %}
 </div>
 
-<!-- OOB swap for order status -->
+<!-- swap for order status -->
 <div id="order-status" hx-swap-oob="true" {% if order and order.status == "PENDING" %} hx-get="{% url 'check_order_status' %}" hx-trigger="every 3s" hx-swap="outerHTML" {% endif %}>
   {% if order %}
   <div class="order-status-badge {{ order.status|lower }}">
@@ -77,7 +77,7 @@
   {% endif %}
 </div>
 
-<!-- OOB swap for cart icon in header -->
+<!-- swap for cart icon in header -->
 <a href="{% url 'cart' %}" class="header-action" id="cart-icon" hx-swap-oob="true">
     <i class="fa fa-shopping-cart"></i>
     {% if cart|length > 0 %}
@@ -86,7 +86,7 @@
     <span>Cart</span>
 </a>
 
-<!-- OOB swap for checkout button -->
+<!-- swap for checkout button -->
 {% if user.is_authenticated %}
 <button class="checkout-btn" @click="open = true" {% if not cart %}style="display:none"{% endif %} id="checkout-btn-main" hx-swap-oob="true">
     <i class="fa fa-lock"></i> Proceed to Checkout

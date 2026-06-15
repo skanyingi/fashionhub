@@ -6,12 +6,22 @@ class Command(BaseCommand):
     help = "Create default admin user"
 
     def handle(self, *args, **options):
-        if not User.objects.filter(username="admin").exists():
+        username = "admin"
+        password = "admin123"
+        email = "admin@fashionhub.com"
+        
+        user = User.objects.filter(username=username).first()
+        if not user:
             User.objects.create_superuser(
-                username="admin", email="admin@fashionhub.com", password="admin123"
+                username=username, email=email, password=password
             )
             self.stdout.write(
-                self.style.SUCCESS("Admin user created: admin / admin123")
+                self.style.SUCCESS(f"Admin user created: {username} / {password}")
             )
         else:
-            self.stdout.write("Admin user already exists")
+            # Force update password to ensure login works on Render
+            user.set_password(password)
+            user.is_superuser = True
+            user.is_staff = True
+            user.save()
+            self.stdout.write(self.style.SUCCESS(f"Admin password reset to: {password}"))

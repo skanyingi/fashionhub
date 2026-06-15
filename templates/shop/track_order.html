@@ -137,9 +137,7 @@
             {% csrf_token %}
             <input type="text" name="tracking_number" placeholder="Enter Tracking Number (e.g., A1B2C3)" value="{{ request.POST.tracking_number|default:'' }}">
             
-            <!-- <div class="or-divider">OR</div> -->
-            
-            <!-- <input type="email" name="email" placeholder="Enter Email Address" value="{{ request.POST.email|default:'' }}"> -->
+           
             
             <button type="submit">
                 <i class="fa fa-search"></i> Track Order
