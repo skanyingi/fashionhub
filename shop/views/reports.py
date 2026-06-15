@@ -95,7 +95,7 @@ def run_report_generation():
             "data": {
                 "last_updated": timestamp_str,
                 "total_products": products.count(),
-                "low_stock": products.filter(stock__lt=10).count(),
+                "low_stock": products.filter(stock__lte=5).count(),
                 "items": [{"name": p.name, "stock": p.stock, "price": p.price} for p in products[:20]],
             }
         }

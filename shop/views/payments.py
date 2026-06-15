@@ -262,7 +262,7 @@ def mpesa_callback(request):
                     print(f" Platform receipt creation failed: {e}")
 
                 # Send confirmation email (backup)
-                email = order.buyer.email if order.buyer else None
+                email = order.email or (order.buyer.email if order.buyer else None)
                 if email:
                     try:
                         subject = f"Payment Confirmed - FashionHub Order {order.tracking_number}"

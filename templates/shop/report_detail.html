@@ -150,8 +150,10 @@
         <tbody>
             {% for item in report.data.items %}
             <tr>
-                {% for value in item.values %}
-                <td>{{ value }}</td>
+                {% for key, value in item.items %}
+                <td {% if 'stock' in key|lower and value <= 5 %}style="color: #dc3545; font-weight: bold;"{% endif %}>
+                    {{ value }}
+                </td>
                 {% endfor %}
             </tr>
             {% endfor %}
