@@ -60,7 +60,12 @@ FashionHub is a professional-grade, deployment-ready e-commerce platform built w
 
    ```bash
    python manage.py migrate
+
+   # Load all products
    python manage.py loaddata shop/fixtures/products.json
+
+   # Or load the full database export (products + orders + users + etc.)
+   python manage.py loaddata database_export.json
    ```
 
 6. **Start Server:**
@@ -88,5 +93,35 @@ The project follows strict **Third Normal Form (3NF)** principles. Key entities 
 - **Order & OrderItem:** Business contracts with price persistence.
 - **Transaction:** Decoupled financial records for payment auditing.
 - **Review & ReviewHelpful:** Social interaction and feedback.
+
+## 📦 Exported Database
+
+The file `database_export.json` is a complete database dump in Django fixture format. It contains **156 records** across all models including products (143), orders, order items, users, transactions, receipts, reports, and reviews.
+
+### Sample Entry
+
+```json
+[
+  {
+    "model": "shop.product",
+    "pk": 1,
+    "fields": {
+      "name": "dress",
+      "description": "African wear with vibrant color good for outdoors",
+      "price": 1500,
+      "image": "products/w1.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  }
+]
+```
+
+### Load the Export
+
+```bash
+python manage.py loaddata database_export.json
+```
 
 ---
