@@ -1,0 +1,2002 @@
+[
+  {
+    "model": "shop.product",
+    "pk": 1,
+    "fields": {
+      "name": "dress",
+      "description": "African wear with vibrant color good for outdoors",
+      "price": 1,
+      "image": "products/w1.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 2,
+    "fields": {
+      "name": "lady shirts",
+      "description": "",
+      "price": 2000,
+      "image": "products/w2.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 0
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 3,
+    "fields": {
+      "name": "outgoing blouse",
+      "description": "",
+      "price": 1900,
+      "image": "products/w3.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 4,
+    "fields": {
+      "name": "checked shirt",
+      "description": "",
+      "price": 3000,
+      "image": "products/m1_RhP4dtz.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 5,
+    "fields": {
+      "name": "men sweater",
+      "description": "",
+      "price": 3000,
+      "image": "products/m2.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 6
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 6,
+    "fields": {
+      "name": "men blazer coat",
+      "description": "",
+      "price": 4000,
+      "image": "products/m3.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 6
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 7,
+    "fields": {
+      "name": "men shirt",
+      "description": "",
+      "price": 2507,
+      "image": "products/m4.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 7
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 8,
+    "fields": {
+      "name": "Men T-shirt",
+      "description": "",
+      "price": 2800,
+      "image": "products/m5.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 6
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 9,
+    "fields": {
+      "name": "official blazer",
+      "description": "",
+      "price": 6000,
+      "image": "products/m6.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 3
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 10,
+    "fields": {
+      "name": "trenchcoat",
+      "description": "",
+      "price": 4500,
+      "image": "products/w4.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 11,
+    "fields": {
+      "name": "lady sweater",
+      "description": "",
+      "price": 5500,
+      "image": "products/w5.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 12,
+    "fields": {
+      "name": "scarf",
+      "description": "",
+      "price": 2021,
+      "image": "products/w6.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 6
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 13,
+    "fields": {
+      "name": "Guarfia heels",
+      "description": "",
+      "price": 4000,
+      "image": "products/ws1.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 1
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 14,
+    "fields": {
+      "name": "glitter heels",
+      "description": "",
+      "price": 2500,
+      "image": "products/gavin_nF4E8fK.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 15,
+    "fields": {
+      "name": "black heels",
+      "description": "",
+      "price": 3000,
+      "image": "products/ws2.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 16,
+    "fields": {
+      "name": "diana-light handbag",
+      "description": "",
+      "price": 3000,
+      "image": "products/diana-light.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 17,
+    "fields": {
+      "name": "leather-brown handbag",
+      "description": "",
+      "price": 5000,
+      "image": "products/irene-kredenets-tcVH_BwHtrc-unsplash.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 1
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 18,
+    "fields": {
+      "name": "choutte handbag",
+      "description": "",
+      "price": 5500,
+      "image": "products/laura-chouette-CtOA9wbFAdQ-unsplash.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 1
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 19,
+    "fields": {
+      "name": "Usama Niko Shoes",
+      "description": "",
+      "price": 3000,
+      "image": "products/usama-akram-kP6knT7tjn4-unsplash.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 2
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 20,
+    "fields": {
+      "name": "Mana Leather Shoes",
+      "description": "",
+      "price": 5000,
+      "image": "products/mana-akbarzadegan-Y0RB2z12F1A-unsplash_uSEGrdA.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 3
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 21,
+    "fields": {
+      "name": "smith brown loafers",
+      "description": "",
+      "price": 6999,
+      "image": "products/noah-smith-LkuH3Txi_gs-unsplash_ufeUxAY.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 4
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 22,
+    "fields": {
+      "name": "Rolex Needle Watch",
+      "description": "",
+      "price": 7000,
+      "image": "products/fashion-needles-BXUeGHzjARs-unsplash.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 4
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 23,
+    "fields": {
+      "name": "Quartz Needle Watch",
+      "description": "",
+      "price": 6990,
+      "image": "products/fashion-needles-QRtWtyiU6cM-unsplash.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 24,
+    "fields": {
+      "name": "Rinald Rolex Watch",
+      "description": "",
+      "price": 5000,
+      "image": "products/rinald-rolle-1mA6C6zoNRU-unsplash.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 3
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 25,
+    "fields": {
+      "name": "Floral Summer Dress",
+      "description": "High quality floral summer dress for women",
+      "price": 2500,
+      "image": "products/Floral Summer Dress.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 71
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 26,
+    "fields": {
+      "name": "Elegant Maxi Dress",
+      "description": "High quality elegant maxi dress for women",
+      "price": 4500,
+      "image": "products/ElegantMaxiDress.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 67
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 27,
+    "fields": {
+      "name": "Casual A-Line Skirt",
+      "description": "High quality casual a-line skirt for women",
+      "price": 1800,
+      "image": "products/CasualA-LineSkirt.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 89
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 28,
+    "fields": {
+      "name": "Silk Blouse",
+      "description": "High quality silk blouse for women",
+      "price": 3200,
+      "image": "products/SilkBlouse.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 22
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 29,
+    "fields": {
+      "name": "Denim Jacket",
+      "description": "High quality denim jacket for women",
+      "price": 4000,
+      "image": "products/DenimJacket.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 21
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 30,
+    "fields": {
+      "name": "Cotton T-Shirt",
+      "description": "High quality cotton t-shirt for women",
+      "price": 1200,
+      "image": "products/CottonT-Shirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 100
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 31,
+    "fields": {
+      "name": "Linen Pants",
+      "description": "High quality linen pants for women",
+      "price": 2800,
+      "image": "products/LinenPants.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 18
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 32,
+    "fields": {
+      "name": "Pencil Skirt",
+      "description": "High quality pencil skirt for women",
+      "price": 2200,
+      "image": "products/PencilSkirt.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 35
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 33,
+    "fields": {
+      "name": "Wrap Dress",
+      "description": "High quality wrap dress for women",
+      "price": 3500,
+      "image": "products/WrapDress.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 96
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 34,
+    "fields": {
+      "name": "Cardigan Sweater",
+      "description": "High quality cardigan sweater for women",
+      "price": 3000,
+      "image": "products/CardiganSweater.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 11
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 35,
+    "fields": {
+      "name": "Cargo Pants",
+      "description": "High quality cargo pants for women",
+      "price": 2600,
+      "image": "products/CargoPants.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 62
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 36,
+    "fields": {
+      "name": "Printed Top",
+      "description": "High quality printed top for women",
+      "price": 1500,
+      "image": "products/PrintedTop.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 27
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 37,
+    "fields": {
+      "name": "Midi Skirt",
+      "description": "High quality midi skirt for women",
+      "price": 2000,
+      "image": "products/MidiSkirt.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 85
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 38,
+    "fields": {
+      "name": "Knit Sweater",
+      "description": "High quality knit sweater for women",
+      "price": 3500,
+      "image": "products/KnitSweater.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 59
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 39,
+    "fields": {
+      "name": "Wide Leg Pants",
+      "description": "High quality wide leg pants for women",
+      "price": 2400,
+      "image": "products/WideLegPants.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 98
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 40,
+    "fields": {
+      "name": "Off-Shoulder Top",
+      "description": "High quality off-shoulder top for women",
+      "price": 1800,
+      "image": "products/Off-ShoulderTop.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 89
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 41,
+    "fields": {
+      "name": "Palazzo Pants",
+      "description": "High quality palazzo pants for women",
+      "price": 2200,
+      "image": "products/PalazzoPants.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 99
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 42,
+    "fields": {
+      "name": "Turtleneck",
+      "description": "High quality turtleneck for women",
+      "price": 2000,
+      "image": "products/Turtleneck.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 59
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 43,
+    "fields": {
+      "name": "Blazer",
+      "description": "High quality blazer for women",
+      "price": 5000,
+      "image": "products/Blazer_ouUr3ID.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 59
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 44,
+    "fields": {
+      "name": "Cropped Jacket",
+      "description": "High quality cropped jacket for women",
+      "price": 4500,
+      "image": "products/CroppedJacket.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 25
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 45,
+    "fields": {
+      "name": "High Heel Pumps",
+      "description": "High quality high heel pumps for women",
+      "price": 4500,
+      "image": "products/High Heel Pumps.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 100
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 46,
+    "fields": {
+      "name": "Flat Sandals",
+      "description": "High quality flat sandals for women",
+      "price": 1800,
+      "image": "products/FlatSandals.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 17
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 47,
+    "fields": {
+      "name": "Ankle Boots",
+      "description": "High quality ankle boots for women",
+      "price": 5500,
+      "image": "products/AnkleBoots.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 89
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 48,
+    "fields": {
+      "name": "Sneakers",
+      "description": "High quality sneakers for women",
+      "price": 4000,
+      "image": "products/Sneakers.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 97
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 49,
+    "fields": {
+      "name": "Wedges",
+      "description": "High quality wedges for women",
+      "price": 3200,
+      "image": "products/Wedges.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 99
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 50,
+    "fields": {
+      "name": "Loafers",
+      "description": "High quality loafers for women",
+      "price": 2800,
+      "image": "products/Loafers.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 71
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 51,
+    "fields": {
+      "name": "Ballet Flats",
+      "description": "High quality ballet flats for women",
+      "price": 2000,
+      "image": "products/BalletFlats.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 33
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 52,
+    "fields": {
+      "name": "Strappy Heels",
+      "description": "High quality strappy heels for women",
+      "price": 3800,
+      "image": "products/StrappyHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 72
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 53,
+    "fields": {
+      "name": "Espadrilles",
+      "description": "High quality espadrilles for women",
+      "price": 2000,
+      "image": "products/Espadrilles.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 55
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 54,
+    "fields": {
+      "name": "Mules",
+      "description": "High quality mules for women",
+      "price": 2500,
+      "image": "products/Mules.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 12
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 55,
+    "fields": {
+      "name": "Platform Heels",
+      "description": "High quality platform heels for women",
+      "price": 4200,
+      "image": "products/PlatformHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 83
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 56,
+    "fields": {
+      "name": "Knee High Boots",
+      "description": "High quality knee high boots for women",
+      "price": 7000,
+      "image": "products/KneeHighBoots.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 15
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 57,
+    "fields": {
+      "name": "Slip Ons",
+      "description": "High quality slip ons for women",
+      "price": 2500,
+      "image": "products/SlipOns.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 64
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 58,
+    "fields": {
+      "name": "Block Heels",
+      "description": "High quality block heels for women",
+      "price": 3500,
+      "image": "products/BlockHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 28
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 59,
+    "fields": {
+      "name": "Running Shoes",
+      "description": "High quality running shoes for women",
+      "price": 5000,
+      "image": "products/RunningShoes.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 16
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 60,
+    "fields": {
+      "name": "Slides",
+      "description": "High quality slides for women",
+      "price": 1500,
+      "image": "products/Slides.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 93
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 61,
+    "fields": {
+      "name": "Chelsea Boots",
+      "description": "High quality chelsea boots for women",
+      "price": 6500,
+      "image": "products/ChelseaBoots.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 13
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 62,
+    "fields": {
+      "name": "Stiletto Heels",
+      "description": "High quality stiletto heels for women",
+      "price": 4800,
+      "image": "products/StilettoHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 44
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 63,
+    "fields": {
+      "name": "Comfort Flats",
+      "description": "High quality comfort flats for women",
+      "price": 2000,
+      "image": "products/ComfortFlats.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 71
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 64,
+    "fields": {
+      "name": "Jelly Sandals",
+      "description": "High quality jelly sandals for women",
+      "price": 1200,
+      "image": "products/JellySandals.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 75
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 65,
+    "fields": {
+      "name": "Leather Tote Bag",
+      "description": "High quality leather tote bag for women",
+      "price": 6500,
+      "image": "products/LeatherToteBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 63
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 66,
+    "fields": {
+      "name": "Crossbody Bag",
+      "description": "High quality crossbody bag for women",
+      "price": 3500,
+      "image": "products/CrossbodyBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 81
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 67,
+    "fields": {
+      "name": "Clutch Purse",
+      "description": "High quality clutch purse for women",
+      "price": 2000,
+      "image": "products/ClutchPurse.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 26
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 68,
+    "fields": {
+      "name": "Backpack",
+      "description": "High quality backpack for women",
+      "price": 4500,
+      "image": "products/Backpack.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 94
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 69,
+    "fields": {
+      "name": "Shoulder Bag",
+      "description": "High quality shoulder bag for women",
+      "price": 4000,
+      "image": "products/ShoulderBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 66
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 70,
+    "fields": {
+      "name": "Satchel",
+      "description": "High quality satchel for women",
+      "price": 5500,
+      "image": "products/Satchel.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 91
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 71,
+    "fields": {
+      "name": "Bucket Bag",
+      "description": "High quality bucket bag for women",
+      "price": 3800,
+      "image": "products/BucketBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 63
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 72,
+    "fields": {
+      "name": "Mini Bag",
+      "description": "High quality mini bag for women",
+      "price": 2500,
+      "image": "products/MiniBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 96
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 73,
+    "fields": {
+      "name": "Hobo Bag",
+      "description": "High quality hobo bag for women",
+      "price": 4200,
+      "image": "products/HoboBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 16
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 74,
+    "fields": {
+      "name": "Wristlet",
+      "description": "High quality wristlet for women",
+      "price": 1500,
+      "image": "products/Wristlet.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 40
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 75,
+    "fields": {
+      "name": "Messenger Bag",
+      "description": "High quality messenger bag for women",
+      "price": 3800,
+      "image": "products/MessengerBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 53
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 76,
+    "fields": {
+      "name": "Tote Bag",
+      "description": "High quality tote bag for women",
+      "price": 5000,
+      "image": "products/ToteBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 36
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 77,
+    "fields": {
+      "name": "Evening Bag",
+      "description": "High quality evening bag for women",
+      "price": 2800,
+      "image": "products/EveningBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 90
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 78,
+    "fields": {
+      "name": "Weekend Bag",
+      "description": "High quality weekend bag for women",
+      "price": 6000,
+      "image": "products/WeekendBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 14
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 79,
+    "fields": {
+      "name": "Saddle Bag",
+      "description": "High quality saddle bag for women",
+      "price": 3200,
+      "image": "products/SaddleBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 15
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 80,
+    "fields": {
+      "name": "Drawstring Bag",
+      "description": "High quality drawstring bag for women",
+      "price": 2200,
+      "image": "products/DrawstringBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 87
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 81,
+    "fields": {
+      "name": "Envelope Clutch",
+      "description": "High quality envelope clutch for women",
+      "price": 2500,
+      "image": "products/EnvelopeClutch.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 31
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 82,
+    "fields": {
+      "name": "Fanny Pack",
+      "description": "High quality fanny pack for women",
+      "price": 1800,
+      "image": "products/FannyPack.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 49
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 83,
+    "fields": {
+      "name": "Shopping Bag",
+      "description": "High quality shopping bag for women",
+      "price": 3500,
+      "image": "products/ShoppingBag.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 62
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 84,
+    "fields": {
+      "name": "Phone Purse",
+      "description": "High quality phone purse for women",
+      "price": 1500,
+      "image": "products/PhonePurse.jpg",
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 30
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 85,
+    "fields": {
+      "name": "Slim Fit Shirt",
+      "description": "High quality slim fit shirt for men",
+      "price": 2500,
+      "image": "products/SlimFitShirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 73
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 86,
+    "fields": {
+      "name": "Chino Pants",
+      "description": "High quality chino pants for men",
+      "price": 3000,
+      "image": "products/ChinoPants.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 41
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 87,
+    "fields": {
+      "name": "Denim Jeans",
+      "description": "High quality denim jeans for men",
+      "price": 3500,
+      "image": "products/DenimJeans.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 92
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 88,
+    "fields": {
+      "name": "Polo Shirt",
+      "description": "High quality polo shirt for men",
+      "price": 1800,
+      "image": "products/PoloShirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 87
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 89,
+    "fields": {
+      "name": "Casual Blazer",
+      "description": "High quality casual blazer for men",
+      "price": 5500,
+      "image": "products/CasualBlazer.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 15
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 90,
+    "fields": {
+      "name": "Linen Shirt",
+      "description": "High quality linen shirt for men",
+      "price": 2200,
+      "image": "products/LinenShirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 100
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 91,
+    "fields": {
+      "name": "Cargo Shorts",
+      "description": "High quality cargo shorts for men",
+      "price": 2000,
+      "image": "products/CargoShorts.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 74
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 92,
+    "fields": {
+      "name": "V-Neck Sweater",
+      "description": "High quality v-neck sweater for men",
+      "price": 2800,
+      "image": "products/V-NeckSweater.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 66
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 93,
+    "fields": {
+      "name": "Hoodie",
+      "description": "High quality hoodie for men",
+      "price": 3000,
+      "image": "products/Hoodie.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 73
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 94,
+    "fields": {
+      "name": "Dress Pants",
+      "description": "High quality dress pants for men",
+      "price": 3200,
+      "image": "products/DressPants.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 42
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 95,
+    "fields": {
+      "name": "Casual Jacket",
+      "description": "High quality casual jacket for men",
+      "price": 4500,
+      "image": "products/CasualJacket.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 36
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 96,
+    "fields": {
+      "name": "Oxford Shirt",
+      "description": "High quality oxford shirt for men",
+      "price": 2800,
+      "image": "products/OxfordShirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 65
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 97,
+    "fields": {
+      "name": "Track Pants",
+      "description": "High quality track pants for men",
+      "price": 2200,
+      "image": "products/TrackPants.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 23
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 98,
+    "fields": {
+      "name": "Cardigan",
+      "description": "High quality cardigan for men",
+      "price": 2500,
+      "image": "products/Cardigan.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 97
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 99,
+    "fields": {
+      "name": "Flannel Shirt",
+      "description": "High quality flannel shirt for men",
+      "price": 2400,
+      "image": "products/FlannelShirt.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 82
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 100,
+    "fields": {
+      "name": "Slim Fit Jeans",
+      "description": "High quality slim fit jeans for men",
+      "price": 3800,
+      "image": "products/SlimFitJeans.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 81
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 101,
+    "fields": {
+      "name": "Wool Coat",
+      "description": "High quality wool coat for men",
+      "price": 8000,
+      "image": "products/WoolCoat.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 98
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 102,
+    "fields": {
+      "name": "Bomber Jacket",
+      "description": "High quality bomber jacket for men",
+      "price": 5000,
+      "image": "products/BomberJacket.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 84
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 103,
+    "fields": {
+      "name": "Knit Polo",
+      "description": "High quality knit polo for men",
+      "price": 2600,
+      "image": "products/KnitPolo.jpg",
+      "category": "men",
+      "subcategory": "clothing",
+      "stock": 38
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 104,
+    "fields": {
+      "name": "Leather Oxford",
+      "description": "High quality leather oxford for men",
+      "price": 6000,
+      "image": "products/LeatherOxford.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 25
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 105,
+    "fields": {
+      "name": "Casual Loafers",
+      "description": "High quality casual loafers for men",
+      "price": 4000,
+      "image": "products/CasualLoafers.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 86
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 106,
+    "fields": {
+      "name": "Canvas Sneakers",
+      "description": "High quality canvas sneakers for men",
+      "price": 3000,
+      "image": "products/CanvasSneakers.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 88
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 107,
+    "fields": {
+      "name": "Boat Shoes",
+      "description": "High quality boat shoes for men",
+      "price": 3500,
+      "image": "products/BoatShoes.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 75
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 108,
+    "fields": {
+      "name": "Dress Boots",
+      "description": "High quality dress boots for men",
+      "price": 7000,
+      "image": "products/DressBoots.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 59
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 109,
+    "fields": {
+      "name": "Sandals",
+      "description": "High quality sandals for men",
+      "price": 1500,
+      "image": "products/Sandals.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 27
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 110,
+    "fields": {
+      "name": "Brogues",
+      "description": "High quality brogues for men",
+      "price": 5500,
+      "image": "products/Brogues.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 45
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 111,
+    "fields": {
+      "name": "Derby Shoes",
+      "description": "High quality derby shoes for men",
+      "price": 5000,
+      "image": "products/DerbyShoes.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 63
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 112,
+    "fields": {
+      "name": "Athletic Shoes",
+      "description": "High quality athletic shoes for men",
+      "price": 4500,
+      "image": "products/AthleticShoes.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 20
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 113,
+    "fields": {
+      "name": "Moccasins",
+      "description": "High quality moccasins for men",
+      "price": 3200,
+      "image": "products/Moccasins.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 87
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 114,
+    "fields": {
+      "name": "Trainers",
+      "description": "High quality trainers for men",
+      "price": 3800,
+      "image": "products/Trainers.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 72
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 115,
+    "fields": {
+      "name": "Work Boots",
+      "description": "High quality work boots for men",
+      "price": 6000,
+      "image": "products/WorkBoots.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 96
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 116,
+    "fields": {
+      "name": "Monk Strap",
+      "description": "High quality monk strap for men",
+      "price": 5800,
+      "image": "products/MonkStrap.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 86
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 117,
+    "fields": {
+      "name": "Slippers",
+      "description": "High quality slippers for men",
+      "price": 1800,
+      "image": "products/Slippers.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 88
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 118,
+    "fields": {
+      "name": "Hiking Boots",
+      "description": "High quality hiking boots for men",
+      "price": 7000,
+      "image": "products/HikingBoots.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 66
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 119,
+    "fields": {
+      "name": "Golf Shoes",
+      "description": "High quality golf shoes for men",
+      "price": 4500,
+      "image": "products/GolfShoes.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 17
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 120,
+    "fields": {
+      "name": "Classic Leather Watch",
+      "description": "High quality classic leather watch for men",
+      "price": 8000,
+      "image": "products/ClassicLeatherWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 19
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 121,
+    "fields": {
+      "name": "Stainless Steel Watch",
+      "description": "High quality stainless steel watch for men",
+      "price": 12000,
+      "image": "products/StainlessSteelWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 91
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 122,
+    "fields": {
+      "name": "Chronograph Watch",
+      "description": "High quality chronograph watch for men",
+      "price": 15000,
+      "image": "products/ChronographWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 73
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 123,
+    "fields": {
+      "name": "Smart Watch",
+      "description": "High quality smart watch for men",
+      "price": 18000,
+      "image": "products/SmartWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 76
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 124,
+    "fields": {
+      "name": "Diving Watch",
+      "description": "High quality diving watch for men",
+      "price": 10000,
+      "image": "products/DivingWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 92
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 125,
+    "fields": {
+      "name": "Minimalist Watch",
+      "description": "High quality minimalist watch for men",
+      "price": 6000,
+      "image": "products/MinimalistWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 27
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 126,
+    "fields": {
+      "name": "Automatic Watch",
+      "description": "High quality automatic watch for men",
+      "price": 20000,
+      "image": "products/AutomaticWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 28
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 127,
+    "fields": {
+      "name": "Digital Watch",
+      "description": "High quality digital watch for men",
+      "price": 4000,
+      "image": "products/DigitalWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 49
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 128,
+    "fields": {
+      "name": "Sport Watch",
+      "description": "High quality sport watch for men",
+      "price": 7000,
+      "image": "products/SportWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 28
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 129,
+    "fields": {
+      "name": "Gold Plated Watch",
+      "description": "High quality gold plated watch for men",
+      "price": 25000,
+      "image": "products/GoldPlatedWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 83
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 130,
+    "fields": {
+      "name": "Titanium Watch",
+      "description": "High quality titanium watch for men",
+      "price": 16000,
+      "image": "products/TitaniumWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 68
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 131,
+    "fields": {
+      "name": "Skeleton Watch",
+      "description": "High quality skeleton watch for men",
+      "price": 22000,
+      "image": "products/SkeletonWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 82
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 132,
+    "fields": {
+      "name": "Pilot Watch",
+      "description": "High quality pilot watch for men",
+      "price": 14000,
+      "image": "products/PilotWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 88
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 133,
+    "fields": {
+      "name": "Field Watch",
+      "description": "High quality field watch for men",
+      "price": 5000,
+      "image": "products/FieldWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 75
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 134,
+    "fields": {
+      "name": "Dress Watch",
+      "description": "High quality dress watch for men",
+      "price": 9000,
+      "image": "products/DressWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 43
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 135,
+    "fields": {
+      "name": "Racing Watch",
+      "description": "High quality racing watch for men",
+      "price": 13000,
+      "image": "products/RacingWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 40
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 136,
+    "fields": {
+      "name": "Aviator Watch",
+      "description": "High quality aviator watch for men",
+      "price": 11000,
+      "image": "products/AviatorWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 34
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 137,
+    "fields": {
+      "name": "Luxury Watch",
+      "description": "High quality luxury watch for men",
+      "price": 35000,
+      "image": "products/LuxuryWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 14
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 138,
+    "fields": {
+      "name": "Casual Watch",
+      "description": "High quality casual watch for men",
+      "price": 3500,
+      "image": "products/CasualWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 40
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 139,
+    "fields": {
+      "name": "Hybrid Smart Watch",
+      "description": "High quality hybrid smart watch for men",
+      "price": 14000,
+      "image": "products/HybridSmartWatch.jpg",
+      "category": "men",
+      "subcategory": "watches",
+      "stock": 51
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 140,
+    "fields": {
+      "name": "Beacon Stiletto Heels",
+      "description": "",
+      "price": 200,
+      "image": "products/BeaconStilettoHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 141,
+    "fields": {
+      "name": "Gianvito Rossi Heels",
+      "description": "",
+      "price": 200,
+      "image": "products/GianvitoRossiHeels.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 142,
+    "fields": {
+      "name": "Ankle Boots",
+      "description": "",
+      "price": 4500,
+      "image": "products/AnkleBoots.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 143,
+    "fields": {
+      "name": "Classic Heels",
+      "description": "",
+      "price": 3500,
+      "image": "products/AnkleBoots.jpg",
+      "category": "women",
+      "subcategory": "shoes",
+      "stock": 15
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "pbkdf2_sha256$1000000$TaHLuQEqHjUftYzAznKImd$SSR6GhVrgpqEdJHuFCWk5ewznJNwnXlYhQCjXIEkm1A="
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 1,
+    "fields": {
+      "name": "African Dress",
+      "description": "Vibrant colors for outdoors",
+      "price": 1500,
+      "image": "products/w1.jpg",
+      "category": "women",
+      "subcategory": "clothing",
+      "stock": 5
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 2,
+    "fields": {
+      "name": "Men Leather Shoes",
+      "description": "Classic formal wear",
+      "price": 2500,
+      "image": "products/m1.jpg",
+      "category": "men",
+      "subcategory": "shoes",
+      "stock": 10
+    }
+  },
+  {
+    "model": "shop.product",
+    "pk": 3,
+    "fields": {
+      "name": "Out of Stock Bag",
+      "description": "Unavailable item",
+      "price": 800,
+      "category": "women",
+      "subcategory": "handbags",
+      "stock": 0
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 1,
+    "fields": {
+      "buyer": 1,
+      "location": "Nairobi",
+      "status": "PENDING",
+      "tracking_number": "TRACK123",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.order",
+    "pk": 2,
+    "fields": {
+      "buyer": 1,
+      "location": "Mombasa",
+      "status": "PAID",
+      "tracking_number": "TRACK456",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.orderitem",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "product": 1,
+      "quantity": 1,
+      "unit_price_at_purchase": 1500,
+      "size": "M"
+    }
+  },
+  {
+    "model": "shop.orderitem",
+    "pk": 2,
+    "fields": {
+      "order": 2,
+      "product": 2,
+      "quantity": 2,
+      "unit_price_at_purchase": 2500,
+      "size": "42"
+    }
+  },
+  {
+    "model": "shop.transaction",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "checkout_request_id": "REQ123",
+      "amount": 5000,
+      "status": "SUCCESS",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.receipt",
+    "pk": 1,
+    "fields": {
+      "order": 2,
+      "receipt_number": "RCP-UNIQUE-999",
+      "generated_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.report",
+    "pk": 1,
+    "fields": {
+      "report_type": "sales",
+      "title": "Sales Report",
+      "data": {},
+      "generated_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.review",
+    "pk": 1,
+    "fields": {
+      "product": 1,
+      "buyer": 1,
+      "rating": 5,
+      "comment": "Great!",
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  },
+  {
+    "model": "shop.reviewhelpful",
+    "pk": 1,
+    "fields": {
+      "review": 1,
+      "user": 1,
+      "created_at": "2026-06-12T12:00:00Z"
+    }
+  }
+]
