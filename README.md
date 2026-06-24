@@ -35,7 +35,7 @@ FashionHub is a professional-grade, deployment-ready e-commerce platform built w
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/skanyingi/fashionhub
    cd FashionV3
    ```
 
@@ -43,7 +43,7 @@ FashionHub is a professional-grade, deployment-ready e-commerce platform built w
 
    ```bash
    python -m venv .venv
-   source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+   source .venv/Scripts/activate  # On Windows 
    ```
 
 3. **Install Dependencies:**
@@ -61,10 +61,8 @@ FashionHub is a professional-grade, deployment-ready e-commerce platform built w
    ```bash
    python manage.py migrate
 
-   # Load all products
-   python manage.py loaddata shop/fixtures/products.json
 
-   # Or load the full database export (products + orders + users + etc.)
+   # load the full database 
    python manage.py loaddata database_export.json
    ```
 
