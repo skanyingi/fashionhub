@@ -25,7 +25,7 @@ DEBUG = os.environ.get("DEBUG", "False") == "True"
 GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
 
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', 'pluckiest-lore-presanguine.ngrok-free.dev']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.ngrok-free.app', '.ngrok.io', 'bride-certainly-distance.ngrok-free.dev','pluckiest-lore-presanguine.ngrok-free.dev']
 ALLOWED_HOSTS = ["*"]
 
 
